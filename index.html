@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Москва 112 — Форум штаба</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <header class="site-header">
+        <div class="brand">
+            <div class="brand-mark">112</div>
+            <div>
+                <p class="overline">Единая служба Москвы</p>
+                <h1>Форум штаба</h1>
+            </div>
+        </div>
+        <button class="nav-toggle" aria-label="Меню" onclick="toggleNav()">☰</button>
+        <nav class="nav" id="main-nav">
+            <button class="nav-link" data-section="home">Главная</button>
+            <button class="nav-link" data-section="news">Новости</button>
+            <button class="nav-link" data-section="announcements">Объявления</button>
+            <button class="nav-link" data-section="forum">Форум</button>
+            <button class="nav-link" data-section="faq">FAQ</button>
+            <button class="nav-link" data-section="download">Скачать</button>
+            <button class="nav-link" data-section="gallery">Галерея</button>
+            <button class="nav-link" data-section="chat">Чат</button>
+            <button class="nav-link" data-section="rules">Правила</button>
+            <button class="nav-link" data-section="shop">Пакеты</button>
+            <button class="nav-link" data-section="members">Смена</button>
+            <button class="nav-link" data-section="account">Личный кабинет</button>
+            <a class="nav-link" href="dispatch112.html">112 Центр</a>
+        </nav>
+        <div class="header-actions">
+            <a class="btn ghost" href="launcher.html">Лаунчер</a>
+            <a class="btn primary" href="#download" data-section="download">Запуск</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="section active">
+            <div class="hero">
+                <div>
+                    <p class="overline">KRMP Mobile • Москва</p>
+                    <h2>Единый портал службы 112</h2>
+                    <p class="lede">Форум, оперативный центр и лаунчер в одном проекте: подфорумы, реальные карточки вызовов, живой чат и тестовый запуск мобильного клиента.</p>
+                    <div class="cta-row">
+                        <button class="btn primary" data-section="forum">Открыть подфорумы</button>
+                        <button class="btn secondary" data-section="news">Оперативная сводка</button>
+                    </div>
+                </div>
+                <div class="stats-panel">
+                    <div class="stat">На линии: 281</div>
+                    <div class="stat">Активных экипажей: 53</div>
+                    <div class="stat">Тем в штабе: 1 984</div>
+                    <div class="stat muted">Патч: 2.0.0 • 01.05.2026</div>
+                </div>
+            </div>
+            <div class="panel-grid">
+                <div class="card">
+                    <div class="card-head">
+                        <p class="eyebrow">Оперативные новости</p>
+                        <button class="btn ghost btn-compact" data-section="news">Все</button>
+                    </div>
+                    <ul class="list">
+                        <li>Новая карта Москвы в модуле 112 и обновлённые маршруты.</li>
+                        <li>Рация Baofeng: PTT, голосовой режим и имитация эфира.</li>
+                        <li>Синхронизация лаунчера, форума и центра вызовов.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-head">
+                        <p class="eyebrow">Быстрый старт</p>
+                        <span class="chip chip-ghost">Сервер: hub-digital.ru:7001</span>
+                    </div>
+                    <ol class="steps">
+                        <li>Откройте лаунчер и нажмите «Скачать клиент».</li>
+                        <li>Выберите сервер 112 (диспетчерский/служебный канал).</li>
+                        <li>Зайдите в форум и прочитайте регламенты по службам.</li>
+                        <li>Перейдите в «Центр 112» для тестового диспетчерского режима.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="news" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Оперативные сводки</p>
+                    <h2>Лента Москвы 112</h2>
+                </div>
+                <span class="chip">Актуально • май 2026</span>
+            </div>
+            <div class="card-grid">
+                <article class="news-card" onclick="showNewsDetail(1)">
+                    <div class="news-meta"><span class="badge">Карта</span><time>01.05.2026</time></div>
+                    <h3>Карта Москвы расширена</h3>
+                    <p>Добавлены рабочие маршруты для ППС, МЧС и СМП. Скорректированы зоны реагирования и развязки.</p>
+                    <div class="news-footer"><span>Ops Team</span><span>Просмотры: 1 240</span></div>
+                </article>
+                <article class="news-card" onclick="showNewsDetail(2)">
+                    <div class="news-meta"><span class="badge">Связь</span><time>28.04.2026</time></div>
+                    <h3>Рация Baofeng: новый режим эфира</h3>
+                    <p>Каналы 1–4, PTT-кнопка, фоновые шумы и озвучка входящих сообщений на активной частоте.</p>
+                    <div class="news-footer"><span>Dispatch Tech</span><span>Просмотры: 1 012</span></div>
+                </article>
+                <article class="news-card" onclick="showNewsDetail(3)">
+                    <div class="news-meta"><span class="badge">Форум</span><time>25.04.2026</time></div>
+                    <h3>Личный кабинет обновлён</h3>
+                    <p>Раздел «О себе» синхронизируется сразу, профильная витрина и прогресс активности обновляются в реальном времени.</p>
+                    <div class="news-footer"><span>Forum Team</span><span>Просмотры: 876</span></div>
+                </article>
+                <article class="news-card" onclick="showNewsDetail(4)">
+                    <div class="news-meta"><span class="badge">Техработы</span><time>20.04.2026</time></div>
+                    <h3>Оптимизация мобильного запуска</h3>
+                    <p>Снижен стартовый вес клиента, ускорена проверка обновлений, исправлены лаги при первом входе в лаунчер.</p>
+                    <div class="news-footer"><span>DevOps</span><span>Просмотры: 742</span></div>
+                </article>
+            </div>
+        </section>
+
+        <section id="announcements" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Приказы штаба</p>
+                    <h2>Важно</h2>
+                </div>
+                <span class="chip chip-ghost">Проверь перед игрой</span>
+            </div>
+            <div class="card-grid narrow">
+                <article class="announcement" onclick="showAnnouncementDetail(1)">
+                    <h3>Регламент службы связи обновлён</h3>
+                    <p>Уточнены правила радиообмена, подтверждения вызовов и обязательные префиксы каналов.</p>
+                    <time>30.04.2026</time>
+                </article>
+                <article class="announcement" onclick="showAnnouncementDetail(2)">
+                    <h3>Техническое окно</h3>
+                    <p>03 мая с 02:00 до 03:00 МСК — обслуживание мини-БД и серверного шлюза.</p>
+                    <time>01.05.2026</time>
+                </article>
+                <article class="announcement" onclick="showAnnouncementDetail(3)">
+                    <h3>Набор в модерацию и дежурных диспетчеров</h3>
+                    <p>Нужны активные участники для контроля тем, обработки отчетов и поддержки новых пользователей.</p>
+                    <time>26.04.2026</time>
+                </article>
+                <article class="announcement" onclick="showAnnouncementDetail(4)">
+                    <h3>Пакет «Командный доступ»</h3>
+                    <p>До 10 мая расширенный доступ к тестовым серверам и ранним сборкам клиента.</p>
+                    <time>29.04.2026</time>
+                </article>
+            </div>
+        </section>
+
+        <section id="forum" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Категории форума</p>
+                    <h2>Подфорумы штаба</h2>
+                </div>
+                <span class="chip">Живые обсуждения</span>
+            </div>
+            <div class="forum-wrapper">
+                <div class="forum-categories">
+                    <div class="category">
+                        <h3>Управление вызовами</h3>
+                        <div class="subforum" data-subforum="general" onclick="showSubforum('general')"><a href="#">Диспетчерская</a><span class="topic-count">(0 тем)</span></div>
+                        <div class="subforum" data-subforum="offtopic" onclick="showSubforum('offtopic')"><a href="#">Курилка смен</a><span class="topic-count">(0 тем)</span></div>
+                    </div>
+                    <div class="category">
+                        <h3>Оперативные службы</h3>
+                        <div class="subforum" data-subforum="help" onclick="showSubforum('help')"><a href="#">Полиция</a><span class="topic-count">(0 тем)</span></div>
+                        <div class="subforum" data-subforum="bugs" onclick="showSubforum('bugs')"><a href="#">МЧС</a><span class="topic-count">(0 тем)</span></div>
+                    </div>
+                    <div class="category">
+                        <h3>Медицина и техника</h3>
+                        <div class="subforum" data-subforum="art" onclick="showSubforum('art')"><a href="#">Скорая помощь</a><span class="topic-count">(0 тем)</span></div>
+                        <div class="subforum" data-subforum="videos" onclick="showSubforum('videos')"><a href="#">Техотдел / клиент</a><span class="topic-count">(0 тем)</span></div>
+                    </div>
+                </div>
+
+                <div id="subforum-view" class="subforum-view" style="display: none;">
+                    <div class="subforum-head">
+                        <button class="btn ghost btn-compact" onclick="backToForum()">← Назад</button>
+                        <h3 id="subforum-title"></h3>
+                    </div>
+                    <div class="subforum-body">
+                        <div id="topic-list" class="topic-list"></div>
+                        <div id="topic-view" class="topic-view">Выберите тему слева, чтобы прочитать её.</div>
+                    </div>
+                    <form id="topicForm" class="stacked-form topic-form">
+                        <div class="form-row">
+                            <input type="text" id="topicAuthor" placeholder="Ваш ник" required>
+                            <input type="text" id="topicTitle" placeholder="Заголовок темы" required>
+                        </div>
+                        <textarea id="topicContent" placeholder="Сообщение" required></textarea>
+                        <button type="submit" class="btn secondary">Создать тему</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="user-posts">
+                <h3>Темы сообщества</h3>
+                <div id="posts" class="forum-posts"></div>
+                <form id="postForm" class="stacked-form">
+                    <input type="text" id="postTitle" placeholder="Заголовок темы" required>
+                    <textarea id="postContent" placeholder="Сообщение" required></textarea>
+                    <button type="submit" class="btn primary">Создать тему</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="faq" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">FAQ</p>
+                    <h2>Частые вопросы</h2>
+                </div>
+                <span class="chip chip-ghost">Быстрые ответы</span>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h3>Как запустить мобильный клиент?</h3>
+                    <div id="faq-1" class="faq-content">
+                        <p>Откройте лаунчер, нажмите «Скачать клиент», после загрузки выберите сервер 112 и стартуйте тестовый режим.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <h3>Как работает Центр 112?</h3>
+                    <div id="faq-2" class="faq-content">
+                        <p>В Центре 112 создаются вызовы, назначаются экипажи и ведётся радиожурнал. Полиция, МЧС и СМП двигаются на карте в реальном времени.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <h3>Как настроить рацию Baofeng?</h3>
+                    <div id="faq-3" class="faq-content">
+                        <p>Выберите канал, настройте громкость и шумоподавление, включите «Звуки рации» и «Голосовой синтез» для имитации живого эфира.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <h3>Что делать, если не нажимаются кнопки?</h3>
+                    <div id="faq-4" class="faq-content">
+                        <p>Обновите страницу (Ctrl+F5), очистите localStorage для проекта и проверьте, что открыт файл `index.html` из текущей папки проекта.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="download" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Скачать</p>
+                    <h2>Клиент и ресурсы</h2>
+                </div>
+                <span class="chip">Готово к старту</span>
+            </div>
+            <div class="card-grid narrow">
+                <div class="card download-card">
+                    <h3>KRMP Mobile Client</h3>
+                    <p>Тестовая сборка клиента под проект «Москва 112».</p>
+                    <a href="launcher.html" class="btn primary">Открыть загрузку</a>
+                </div>
+                <div class="card download-card">
+                    <h3>Моды и дополнения</h3>
+                    <p>Рекомендуемые пакеты для стабильного мобильного запуска.</p>
+                    <ul class="list">
+                        <li><a href="#">Пакет карт Москвы</a></li>
+                        <li><a href="#">Звуки сирен и рации</a></li>
+                        <li><a href="#">Оптимизированные текстуры</a></li>
+                    </ul>
+                </div>
+                <div class="card download-card">
+                    <h3>Лаунчер</h3>
+                    <p>Автообновления, проверка целостности и запуск тестового клиента.</p>
+                    <a href="launcher.html" class="btn secondary">Открыть лаунчер</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Галерея</p>
+                    <h2>Кадры служб 112</h2>
+                </div>
+                <span class="chip chip-ghost">Обновлено</span>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80" alt="Патруль полиции в городе">
+                    <p>Патруль полиции в ночной Москве</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1200&q=80" alt="Пожарный расчет">
+                    <p>Пожарный расчет на выезде</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1584362917165-526a968579e8?auto=format&fit=crop&w=1200&q=80" alt="Машина скорой помощи">
+                    <p>Бригада скорой помощи на маршруте</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=1200&q=80" alt="Диспетчерский центр">
+                    <p>Рабочее место диспетчера 112</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="chat" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Чат</p>
+                    <h2>Общий канал</h2>
+                </div>
+                <span class="chip">Live</span>
+            </div>
+            <div id="chat-messages" class="chat-messages"></div>
+            <form id="chatForm" class="chat-form">
+                <input type="text" id="chatMessage" placeholder="Введите сообщение" required>
+                <button type="submit" class="btn primary">Отправить</button>
+            </form>
+        </section>
+
+        <section id="rules" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Регламенты проекта</p>
+                    <h2>Стандарты работы</h2>
+                </div>
+                <span class="chip chip-ghost">Обязательно</span>
+            </div>
+            <div class="rules-content">
+                <h3>Основные</h3>
+                <ol>
+                    <li>Используйте корректный радиообмен: канал, позывной, короткая суть.</li>
+                    <li>Не флудите в общем чате и в эфире, уважайте участников смены.</li>
+                    <li>Любые баги фиксируйте в подфоруме «Техотдел / клиент».</li>
+                    <li>Не публикуйте личные данные и не выдавайте себя за администрацию.</li>
+                    <li>Не распространяйте вредоносные сборки клиента и модов.</li>
+                </ol>
+                <h3>Оперативные</h3>
+                <ul>
+                    <li>При назначении вызова подтверждайте принятие в течение 20 секунд.</li>
+                    <li>При закрытии вызова указывайте короткий результат работы экипажа.</li>
+                    <li>Запрещено блокировать каналы ложными тревогами.</li>
+                </ul>
+                <h3>Модерация</h3>
+                <p>Нарушения обрабатываются через предупреждения, мут и временный бан. Итоговое решение за администрацией проекта.</p>
+                <h3>Апелляции</h3>
+                <p>Если решение кажется ошибочным, создайте тему в подфоруме «Диспетчерская» с логами и скриншотами.</p>
+            </div>
+        </section>
+
+        <section id="shop" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Пакеты доступа</p>
+                    <h2>Поддержка проекта</h2>
+                </div>
+                <span class="chip">Скидки до 10.05</span>
+            </div>
+            <div class="shop-items">
+                <div class="shop-item">
+                    <h4>Премиум доступ (30 дней)</h4>
+                    <p>Приоритет в очереди, расширенные логи, доп. каналы связи.</p>
+                    <p class="price">Цена: 390 ₽</p>
+                    <button class="btn secondary">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <h4>Пакет «Диспетчер PRO»</h4>
+                    <p>Расширенная панель вызовов и набор горячих команд.</p>
+                    <p class="price">Цена: 890 ₽</p>
+                    <button class="btn secondary">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <h4>Пакет «Карта HD»</h4>
+                    <p>Детализированная миникарта Москвы и слои объектов.</p>
+                    <p class="price">Цена: 490 ₽</p>
+                    <button class="btn secondary">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <h4>Пакет «Рация+»</h4>
+                    <p>Дополнительные звуки эфира и пресеты каналов.</p>
+                    <p class="price">Цена: 290 ₽</p>
+                    <button class="btn secondary">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <h4>Командный пакет на 5 мест</h4>
+                    <p>Общий доступ команды к закрытому тестовому серверу.</p>
+                    <p class="price">Цена: 1 590 ₽</p>
+                    <button class="btn secondary">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <h4>VIP доступ (навсегда)</h4>
+                    <p>Персональная роль на форуме, ранние билды и приоритет обновлений.</p>
+                    <p class="price">Цена: 4 900 ₽</p>
+                    <button class="btn secondary">Купить</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="members" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Онлайн</p>
+                    <h2>Состав смены</h2>
+                </div>
+                <span class="chip chip-ghost">Сейчас на сервере</span>
+            </div>
+            <div class="online-members">
+                <div class="member" onclick="showProfile('Dispatch_01')">
+                    <img src="https://images.unsplash.com/photo-1542204625-de293aef22e3?auto=format&fit=crop&w=320&q=80" alt="Dispatch_01" class="avatar">
+                    <div><span>Dispatch_01</span><small>Старший диспетчер</small></div>
+                </div>
+                <div class="member" onclick="showProfile('PPS_204')">
+                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=320&q=80" alt="PPS_204" class="avatar">
+                    <div><span>PPS_204</span><small>Полиция</small></div>
+                </div>
+                <div class="member" onclick="showProfile('MCHS_11')">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=320&q=80" alt="MCHS_11" class="avatar">
+                    <div><span>MCHS_11</span><small>МЧС</small></div>
+                </div>
+                <div class="member" onclick="showProfile('SMP_03')">
+                    <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=320&q=80" alt="SMP_03" class="avatar">
+                    <div><span>SMP_03</span><small>Скорая помощь</small></div>
+                </div>
+                <div class="member" onclick="showProfile('Tech_Lead')">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=320&q=80" alt="Tech_Lead" class="avatar">
+                    <div><span>Tech_Lead</span><small>Техотдел</small></div>
+                </div>
+                <div class="member" onclick="showProfile('Operator_MSK')">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=320&q=80" alt="Operator_MSK" class="avatar">
+                    <div><span>Operator_MSK</span><small>Оператор 112</small></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="account" class="section">
+            <div class="section-head">
+                <div>
+                    <p class="overline">Личный кабинет</p>
+                    <h2>Профиль оператора</h2>
+                </div>
+                <span class="chip chip-ghost">Локальная авторизация</span>
+            </div>
+            <div class="card-grid narrow">
+                <div class="card" id="account-guest">
+                    <div class="card-head">
+                        <p class="eyebrow">Вход / Регистрация</p>
+                        <span class="chip">Без сервера</span>
+                    </div>
+                    <form class="stacked-form" id="loginForm">
+                        <input type="text" id="loginName" placeholder="Никнейм" required>
+                        <input type="email" id="loginEmail" placeholder="Email" required>
+                        <input type="password" id="loginPassword" placeholder="Пароль (локально)" required>
+                        <button type="submit" class="btn primary">Войти</button>
+                        <small class="muted">Данные сохраняются только в localStorage на этом устройстве.</small>
+                    </form>
+                </div>
+                <div class="card" id="account-profile" style="display:none;">
+                    <div class="card-head">
+                        <p class="eyebrow">Ваш профиль</p>
+                        <button class="btn ghost btn-compact" id="logoutBtn">Выйти</button>
+                    </div>
+                    <div class="profile-row">
+                            <div class="avatar-large" id="profileAvatar">112</div>
+                        <div>
+                            <h3 id="profileName">—</h3>
+                            <p class="muted" id="profileEmail">—</p>
+                            <span class="badge" id="profileRole">Оператор</span>
+                            <p class="muted" id="profileAbout" style="margin:6px 0 0">—</p>
+                        </div>
+                    </div>
+                    <form class="stacked-form" id="profileForm">
+                        <input type="url" id="avatarUrl" placeholder="Ссылка на аватар (jpg/png/webp)">
+                        <label class="label-inline" for="aboutText">
+                            О себе <span class="muted" id="aboutCounter">0 / 240</span>
+                        </label>
+                        <textarea id="aboutText" maxlength="240" placeholder="О себе / статус"></textarea>
+                        <button type="submit" class="btn secondary">Сохранить профиль</button>
+                    </form>
+                    <div class="profile-stats">
+                        <div class="stat-chip">Тем: <span id="statTopics">0</span></div>
+                        <div class="stat-chip">Ответов: <span id="statReplies">0</span></div>
+                        <div class="stat-chip">Сообщений в чате: <span id="statChat">0</span></div>
+                    </div>
+                    <div class="about-card">
+                        <div class="card-head">
+                            <p class="eyebrow">Витрина профиля</p>
+                            <span class="chip chip-ghost" id="profileLevel">Уровень 1</span>
+                        </div>
+                        <p id="profileAboutDisplay" class="about-text">О себе пока пусто</p>
+                        <div class="progress-line">
+                            <div class="progress-fill" id="activityProgress"></div>
+                        </div>
+                        <p class="muted" id="activityLabel">0 / 50 XP до следующего уровня</p>
+                        <div class="mini-actions">
+                            <button class="btn ghost btn-compact" onclick="quickLink('discord')">Discord</button>
+                            <button class="btn ghost btn-compact" onclick="quickLink('support')">Саппорт</button>
+                            <button class="btn ghost btn-compact" onclick="copyServer()">Копировать IP</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Москва 112. Все права защищены.</p>
+        <p>Форум • KRMP Mobile • Оперативный центр</p>
+    </footer>
+
+    <div class="mobile-actions">
+        <button class="btn primary" onclick="mobilePlay()">Запуск</button>
+        <button class="btn secondary" data-section="download" onclick="showSection('download')">Клиент</button>
+        <button class="btn ghost" onclick="window.location.href='dispatch112.html'">Центр</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
