@@ -3,321 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hub Digital — бизнес-платформа</title>
+    <title>Панель управления ИП — Hub Digital</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="site-header">
-        <a class="brand" href="#home" data-section="home" aria-label="Hub Digital">
+
+    <aside class="sidebar">
+        <a class="brand" href="#home" data-section="home">
             <span class="brand-mark">HD</span>
-            <span>
+            <div class="brand-text">
                 <strong>Hub Digital</strong>
-                <small>business studio</small>
-            </span>
+                <small>ИП Цифровые Решения</small>
+            </div>
         </a>
 
-        <button class="nav-toggle" aria-label="Меню" onclick="toggleNav()">☰</button>
-        <nav class="nav" id=\"main-nav\">
-            <button class="nav-link" data-section="home">Главная</button>
-            <button class="nav-link" data-section="services">Услуги</button>
-            <button class="nav-link" data-section="cases">Кейсы</button>
-            <button class="nav-link" data-section="process">Процесс</button>
-            <button class="nav-link" data-section="support">Заявки</button>
-            <button class="nav-link" data-section="knowledge">База знаний</button>
-            <button class="nav-link" data-section="account">Кабинет</button>
+        <nav class="sidebar-nav" id="main-nav">
+            <button class="nav-link active" data-section="home">📊 Главная</button>
+            <button class="nav-link" data-section="services">💼 Наши услуги</button>
+            <button class="nav-link" data-section="cases">📂 Портфолио</button>
+            <button class="nav-link" data-section="support">📩 Заявки и CRM</button>
+            <button class="nav-link" data-section="knowledge">🧠 База знаний</button>
+            <button class="nav-link" data-section="account">⚙️ Профиль ИП</button>
         </nav>
 
-        <div class="header-actions">
-            <button class="btn ghost" data-section="account">Войти</button>
-            <button class="btn primary" data-section="support">Обсудить проект</button>
+        <div class="sidebar-footer">
+            <button class="btn ghost btn-compact" data-section="account">Управление</button>
         </div>
-    </header>
+    </aside>
 
-    <main>
-        <section id="home" class="section hero-section active">
-            <div class="hero-bg"></div>
-            <div class="hero-content">
-                <p class="overline">Бизнес-студия цифровых решений</p>
-                <h1>Разрабатываем экосистемы сайтов и CRM для вашего бизнеса</h1>
-                <p class="lede">Создаем быстрые посадочные страницы, личные кабинеты клиентов, интеграции с мессенджерами и базы знаний, которые автоматизируют рутину и поднимают продажи.</p>
-                <div class="cta-row">
-                    <button class="btn primary" data-section="support">Оставить заявку</button>
-                    <button class="btn ghost" data-section="services">Наши услуги</button>
-                </div>
-            </div>
+    <div class="main-layout">
+        <header class="mobile-header">
+            <span class="brand-mark">HD</span>
+            <strong>Hub Digital</strong>
+            <button class="nav-toggle" onclick="toggleNav()">☰</button>
+        </header>
 
-            <div class="hero-metrics">
-                <div>
-                    <span>> 15</span>
-                    <small>Запущенных систем</small>
-                </div>
-                <div>
-                    <span>3 дня</span>
-                    <small>Средний срок релиза</small>
-                </div>
-                <div>
-                    <span>99.9%</span>
-                    <small>Отказоустойчивость</small>
-                </div>
-            </div>
-        </section>
-
-        <div class="signal-band">
-            <div>
-                <span>⚡ Быстрый старт</span>
-                <span>🔒 Безопасность данных</span>
-                <span>📊 Полная аналитика</span>
-                <span>🤖 Автоматизация задач</span>
-                <span>📱 Mobile-first дизайн</span>
-                <span>🛠️ Техподдержка 24/7</span>
-            </div>
-        </div>
-
-        <section id="services" class="section">
-            <div class="section-head">
-                <div>
-                    <p class="overline">Что мы делаем</p>
-                    <h2>Цифровые инструменты</h2>
-                </div>
-            </div>
-            <div class="service-grid">
-                <div class="service-card">
-                    <span class="service-code">WEB</span>
-                    <h3>Сайты для бизнеса</h3>
-                    <p>Адаптивные многостраничные сайты и лендинги с индивидуальной структурой.</p>
-                    <button class="link-button" onclick="prefillTicket('Сайты для бизнеса')">Заказать →</button>
-                </div>
-                <div class="service-card">
-                    <span class="service-code">CRM</span>
-                    <h3>Автоматизация процессов</h3>
-                    <p>Личные кабинеты пользователей, интеграция баз данных и ведение лидов без хаоса.</p>
-                    <button class="link-button" onclick="prefillTicket('Автоматизация процессов')">Заказать →</button>
-                </div>
-                <div class="service-card">
-                    <span class="service-code">BOT</span>
-                    <h3>Чат-боты и уведомления</h3>
-                    <p>Разработка умных Telegram-ботов для автоматической записи клиентов и рассылок.</p>
-                    <button class="link-button" onclick="prefillTicket('Чат-боты и уведомления')">Заказать →</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="cases" class="section cases-section">
-            <div class="section-head">
-                <div>
-                    <p class="overline">Примеры реализации</p>
-                    <h2>Наше портфолио</h2>
-                </div>
-            </div>
-            <div class="case-grid">
-                <div class="case-card" onclick="showCase('clinic')">
-                    <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80" alt="Клиника">
-                    <div>
-                        <span class="chip">Запись клиентов</span>
-                        <h3>Медицинский центр</h3>
-                        <p>Интеграция расписания врачей и личного кабинета пациента.</p>
+        <main class="content-area">
+            
+            <section id="home" class="section active">
+                <div class="hero-card">
+                    <p class="overline">Автоматизация и разработка</p>
+                    <h1>Платформа управления заказами для вашего бизнеса</h1>
+                    <p class="lede">Развертывание IT-инфраструктуры под ключ: от продающих сайтов до интеграции внутренних CRM и умных Telegram-ботов.</p>
+                    <div class="cta-row">
+                        <button class="btn primary" data-section="support">Создать новый тикет</button>
+                        <button class="btn ghost" data-section="services">Посмотреть прайс</button>
                     </div>
                 </div>
-                <div class="case-card" onclick="showCase('agency')">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" alt="Агентство">
-                    <div>
-                        <span class="chip">B2B</span>
-                        <h3>Личный кабинет агентства</h3>
-                        <p>Клиенты видят этапы выполнения задач и могут скачивать акты.</p>
+
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <span id="stat-total">0</span>
+                        <small>Всего заказов в БД</small>
+                    </div>
+                    <div class="metric-box">
+                        <span id="stat-active">0</span>
+                        <small>В обработке</small>
+                    </div>
+                    <div class="metric-box">
+                        <span>100%</span>
+                        <small>Сохранность данных (IndexedDB)</small>
                     </div>
                 </div>
-                <div class="case-card" onclick="showCase('shop')">
-                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80" alt="Продажи">
-                    <div>
-                        <span class="chip">Продажи</span>
-                        <h3>Каталог цифровых услуг</h3>
-                        <p>Онлайн-заказ пакетов техподдержки со встроенной базой знаний.</p>
+            </section>
+
+            <section id="services" class="section">
+                <div class="section-head">
+                    <h2>Пакетные услуги для бизнеса</h2>
+                </div>
+                <div class="service-grid">
+                    <div class="service-card">
+                        <span class="service-code">TG</span>
+                        <h3>Разработка Telegram-ботов</h3>
+                        <p>Автоматический прием платежей, воронки продаж, запись клиентов на услуги ИП и рассылки прямо в мессенджер.</p>
+                        <button class="link-button" onclick="prefillTicket('Разработка Telegram-ботов')">Выбрать услугу →</button>
+                    </div>
+                    <div class="service-card">
+                        <span class="service-code">CRM</span>
+                        <h3>Внедрение CRM и баз данных</h3>
+                        <p>Разработка дашбордов для контроля менеджеров, автоматизация отчетности, сбор заявок без потери лидов.</p>
+                        <button class="link-button" onclick="prefillTicket('Внедрение CRM и баз данных')">Выбрать услугу →</button>
+                    </div>
+                    <div class="service-card">
+                        <span class="service-code">API</span>
+                        <h3>Интеграция сервисов и ТГ</h3>
+                        <p>Свяжем ваш сайт, Telegram, складской учет (МойСклад) и эквайринг (оплаты) в единую рабочую экосистему.</p>
+                        <button class="link-button" onclick="prefillTicket('Интеграция сервисов')">Выбрать услугу →</button>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="process" class="section">
-            <div class="section-head">
-                <div>
-                    <p class="overline">Как мы работаем</p>
-                    <h2>Этапы создания</h2>
+            <section id="cases" class="section">
+                <div class="section-head">
+                    <h2>Успешные интеграции</h2>
                 </div>
-            </div>
-            <div class="timeline">
-                <article>
-                    <span>1</span>
-                    <h3>Аналитика</h3>
-                    <p>Изучаем ваши бизнес-процессы, убираем лишние шаги, проектируем логику проекта.</p>
-                </article>
-                <article>
-                    <span>2</span>
-                    <h3>Прототип</h3>
-                    <p>Собираем каркас страниц, утверждаем расположение блоков и тексты.</p>
-                </article>
-                <article>
-                    <span>3</span>
-                    <h3>Код и дизайн</h3>
-                    <p>Верстаем современный быстрый интерфейс, адаптированный под любые телефоны.</p>
-                </article>
-                <article>
-                    <span>4</span>
-                    <h3>Запуск и SEO</h3>
-                    <p>Привязываем домен, настраиваем SSL-сертификат безопасности и добавляем в Яндекс.</p>
-                </article>
-            </div>
-        </section>
-
-        <section id="support" class="section">
-            <div class="section-head">
-                <div>
-                    <p class="overline">Связь со студией</p>
-                    <h2>Создать новую заявку</h2>
-                </div>
-            </div>
-            <div class="support-layout">
-                <form id="ticketForm" class="work-form">
-                    <label>
-                        Ваше имя
-                        <input type="text" id="ticketName" required placeholder="Иван">
-                    </label>
-                    <label>
-                        Контакт для связи (Telegram / Телефон)
-                        <input type="text" id="ticketContact" required placeholder="@username">
-                    </label>
-                    <label>
-                        Какая услуга интересует?
-                        <select id="ticketService">
-                            <option value="Сайт для бизнеса">Сайт для бизнеса</option>
-                            <option value="CRM и автоматизация">CRM и автоматизация</option>
-                            <option value="Telegram-бот">Telegram-бот</option>
-                            <option value="Другой технический вопрос">Другой технический вопрос</option>
-                        </select>
-                    </label>
-                    <label>
-                        Описание задачи / Комментарий
-                        <textarea id="ticketText" required placeholder="Опишите ваши пожелания к проекту..."></textarea>
-                    </label>
-                    <button class="btn primary" type="submit">Отправить заявку</button>
-                </form>
-
-                <div class="ticket-panel">
-                    <div class="panel-title">
-                        <h3>Текущие заявки в системе</h3>
-                        <button class="btn ghost btn-compact" onclick="clearClosedTickets()">Очистить закрытые</button>
-                    </div>
-                    <div id="ticketList" class="ticket-list"></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="knowledge" class="section">
-            <div class="section-head">
-                <div>
-                    <p class="overline">Полезные материалы</p>
-                    <h2>База знаний для клиентов</h2>
-                </div>
-            </div>
-            <div class="knowledge-layout">
-                <div class="article-list">
-                    <button onclick="showArticle('brief')">📋 Как подготовить ТЗ без сложных слов</button>
-                    <button onclick="showArticle('domain')">🌐 Что нужно для запуска на домене</button>
-                    <button onclick="showArticle('cabinet')">🔑 Зачем бизнесу личный кабинет</button>
-                    <button onclick="showArticle('support')">🛠️ Как работает поддержка после релиза</button>
-                </div>
-                <div class="faq-list">
-                    <div class="faq-item">
-                        <h3>❓ Сколько времени занимает разработка?</h3>
-                        <div class="faq-content">
-                            <p>Простые лендинги и прототипы личных кабинетов мы собираем за 3–5 дней. Сложные интеграции с CRM могут занимать до двух недель.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <h3>❓ Нужен ли дорогой хостинг для старта?</h3>
-                        <div class="faq-content">
-                            <p>Для большинства проектов на старте достаточно бесплатного хостинга GitHub Pages либо самого базового тарифа на Sprinthost (около 150-200 рублей в месяц).</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="account" class="section">
-            <div class="section-head">
-                <div>
-                    <p class="overline">Кабинет партнера</p>
-                    <h2>Управление проектами</h2>
-                </div>
-            </div>
-            <div class="account-layout">
-                <form id="loginForm" class="work-form">
-                    <h3>Вход для клиентов</h3>
-                    <p style="color: var(--muted); margin: 0 0 10px;">Введите данные, чтобы создать локальную сессию вашего бизнеса.</p>
-                    <label>
-                        Имя руководителя
-                        <input type="text" id="loginName" required placeholder="Александр">
-                    </label>
-                    <label>
-                        Рабочий Email
-                        <input type="email" id="loginEmail" required placeholder="ceo@company.ru">
-                    </label>
-                    <label>
-                        Название компании / Проекта
-                        <input type="text" id="loginCompany" required placeholder="Hub Digital">
-                    </label>
-                    <button class="btn primary" type="submit">Создать демо-кабинет</button>
-                </form>
-
-                <div id="profilePanel" class="profile-panel" style="display:none;">
-                    <div class="profile-top">
-                        <div id="profileAvatar" class="avatar-large">HD</div>
+                <div class="case-grid">
+                    <div class="case-card" onclick="showCase('clinic')">
+                        <div class="case-img-placeholder">🏥</div>
                         <div>
-                            <h3 id="profileName">Загрузка...</h3>
-                            <p><span id="profileCompany">...</span> · <span id="profileEmail">...</span></p>
+                            <span class="chip">Автоматизация</span>
+                            <h3>Запись для медцентров в ТГ</h3>
+                            <p>Клиенты записываются через бота, данные летят напрямую в CRM систему.</p>
                         </div>
-                        <button id="logoutBtn" class="btn ghost btn-compact">Выйти</button>
                     </div>
+                    <div class="case-card" onclick="showCase('agency')">
+                        <div class="case-img-placeholder">🚀</div>
+                        <div>
+                            <span class="chip">Кабинеты</span>
+                            <h3>B2B Кабинет дистрибьютора</h3>
+                            <p>Управление оптовыми отгрузками, актами сверки и счетами для контрагентов.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                    <form id="profileForm" class="work-form compact-form">
+            <section id="support" class="section">
+                <div class="section-head">
+                    <h2>Управление заказами (Локальная CRM)</h2>
+                </div>
+                <div class="support-layout">
+                    <form id="ticketForm" class="work-form">
+                        <h3>Регистрация новой сделки</h3>
                         <label>
-                            Заметки по проекту / Доп. инфо
-                            <textarea id="aboutText" placeholder="Здесь можно хранить ссылки на ваши доступы, домены или идеи..."></textarea>
+                            Имя клиента / Контрагент
+                            <input type="text" id="ticketName" required placeholder="ООО Вектор">
                         </label>
-                        <button class="btn secondary" type="submit">Сохранить</button>
+                        <label>
+                            Контакты (Телеграм / Телефон)
+                            <input type="text" id="ticketContact" required placeholder="@manager_opt">
+                        </label>
+                        <label>
+                            Направление проекта
+                            <select id="ticketService">
+                                <option value="Разработка Telegram-ботов">Разработка Telegram-ботов</option>
+                                <option value="Внедрение CRM и баз данных">Внедрение CRM и баз данных</option>
+                                <option value="Интеграция сервисов">Интеграция сервисов</option>
+                            </select>
+                        </label>
+                        <label>
+                            Техническое задание / Комментарий
+                            <textarea id="ticketText" required placeholder="Опишите требования к интеграции или боту..."></textarea>
+                        </label>
+                        <button class="btn primary" type="submit">Сохранить в базу данных</button>
                     </form>
 
-                    <div class="project-strip">
-                        <div><span>Сайт</span><strong id="siteProgress">100%</strong></div>
-                        <div><span>Заявки</span><strong id="ticketCount">0</strong></div>
-                        <div><span>Статус</span><strong>В поиске Яндекса</strong></div>
+                    <div class="ticket-panel">
+                        <div class="panel-title">
+                            <h3>Заказы в IndexedDB</h3>
+                            <button class="btn ghost btn-compact" onclick="clearClosedTickets()">Удалить закрытые</button>
+                        </div>
+                        <div id="ticketList" class="ticket-list"></div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
+
+            <section id="knowledge" class="section">
+                <div class="section-head">
+                    <h2>Инструкции и регламенты ИП</h2>
+                </div>
+                <div class="knowledge-layout">
+                    <div class="article-list">
+                        <button onclick="showArticle('brief')">📋 Шаблон ТЗ на разработку бота</button>
+                        <button onclick="showArticle('domain')">🌐 Как подключить WebApp в Telegram</button>
+                        <button onclick="showArticle('db')">💾 Как устроена база IndexedDB в браузере</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="account" class="section">
+                <div class="section-head">
+                    <h2>Профиль организации (ИП)</h2>
+                </div>
+                <div class="account-layout">
+                    <form id="profileForm" class="work-form">
+                        <h3>Реквизиты и настройки</h3>
+                        <label>
+                            Название организации
+                            <input type="text" id="profCompany" placeholder="ИП Иванов А.А.">
+                        </label>
+                        <label>
+                            ИНН
+                            <input type="text" id="profInn" placeholder="770000000000">
+                        </label>
+                        <label>
+                            Контактный Email для уведомлений
+                            <input type="email" id="profEmail" placeholder="info@it-hub.ru">
+                        </label>
+                        <label>
+                            Рабочие заметки (токены API, ключи ТГ-бота)
+                            <textarea id="profAbout" placeholder="Сюда можно временно сохранить BOT_TOKEN..."></textarea>
+                        </label>
+                        <button class="btn secondary" type="submit">Сохранить профиль</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <div id="modal" class="modal" style="display:none;">
         <div class="modal-content">
-            <button class="close" onclick="closeModal()" aria-label="Закрыть">×</button>
-            <div id=\"modal-body\"></div>
+            <button class="close" onclick="closeModal()">×</button>
+            <div id="modal-body"></div>
         </div>
     </div>
 
-    <footer class="site-footer">
-        <div>
-            <strong>Hub Digital</strong>
-            <p>Сайты, кабинеты, CRM и поддержка для бизнеса.</p>
-        </div>
-        <div>
-            <a href="https://hub-digital.ru">hub-digital.ru</a>
-            <a href="mailto:support@hub-digital.ru">support@hub-digital.ru</a>
-        </div>
-    </footer>
-
     <div class="mobile-actions">
-        <button class="btn primary" data-section="support">Заявка</button>
-        <button class="btn secondary" data-section="services">Услуги</button>
-        <button class="btn ghost" data-section="account">Кабинет</button>
+        <button class="btn primary" data-section="support">📊 CRM</button>
+        <button class="btn secondary" data-section="services">💼 Услуги</button>
+        <button class="btn ghost" data-section="account">⚙️ ИП</button>
     </div>
 
     <script src="script.js"></script>
