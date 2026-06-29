@@ -195,15 +195,17 @@ a {
 .hero-section {
     position: relative;
     display: none;
-    min-height: calc(100vh - 73px);
+    min-height: auto;
     overflow: hidden;
-    padding-top: clamp(80px, 10vw, 132px);
-    padding-bottom: clamp(84px, 10vw, 128px);
+    padding-top: clamp(40px, 8vw, 100px);
+    padding-bottom: clamp(40px, 8vw, 100px);
     color: var(--paper-strong);
 }
 
 .hero-section.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
 .hero-bg {
@@ -211,7 +213,7 @@ a {
     inset: 0;
     z-index: -2;
     background:
-        linear-gradient(90deg, rgba(16, 20, 19, 0.92), rgba(16, 20, 19, 0.58), rgba(16, 20, 19, 0.2)),
+        linear-gradient(90deg, rgba(16, 20, 19, 0.95), rgba(16, 20, 19, 0.7), rgba(16, 20, 19, 0.4)),
         url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80") center / cover;
 }
 
@@ -225,6 +227,7 @@ a {
 
 .hero-content {
     max-width: 820px;
+    padding: 0 16px;
 }
 
 .overline {
@@ -250,8 +253,9 @@ h3 {
 
 h1 {
     max-width: 980px;
-    font-size: clamp(2rem, 5vw, 3.8rem); /* Буквы на старте уменьшены для аккуратного вида */
-    line-height: 1.1; /* Слегка увеличен отступ между строками */
+    font-size: clamp(1.9rem, 4.5vw, 3.5rem);
+    line-height: 1.15;
+    margin-bottom: 16px;
 }
 
 h2 {
@@ -272,19 +276,20 @@ h3 {
 }
 
 .hero-metrics {
-    position: absolute;
-    right: clamp(18px, 5vw, 72px);
-    bottom: clamp(22px, 5vw, 56px);
+    position: relative;
+    right: auto;
+    bottom: auto;
     display: grid;
     grid-template-columns: repeat(3, minmax(120px, 1fr));
     gap: 1px;
     overflow: hidden;
-    width: min(560px, calc(100% - 36px));
+    width: min(560px, 100%);
     color: var(--ink);
     background: rgba(255, 253, 245, 0.2);
     border: 1px solid rgba(255, 253, 245, 0.34);
     border-radius: 8px;
     backdrop-filter: blur(18px);
+    margin-top: 20px;
 }
 
 .hero-metrics div {
@@ -295,7 +300,7 @@ h3 {
 .hero-metrics span {
     display: block;
     font-family: "Space Grotesk", sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 700;
 }
 
@@ -304,8 +309,7 @@ h3 {
 }
 
 .signal-band {
-    padding: 0 clamp(18px, 5vw, 72px);
-    transform: translateY(-28px);
+    padding: 20px 16px;
 }
 
 .signal-band div {
@@ -319,9 +323,10 @@ h3 {
 }
 
 .signal-band span {
-    padding: 18px 12px;
+    padding: 14px 8px;
     text-align: center;
     font-weight: 800;
+    font-size: 0.9rem;
     border-right: 1px solid var(--line);
 }
 
@@ -836,25 +841,30 @@ h3 {
     }
 
     .hero-section {
-        min-height: 720px;
-        padding-top: 82px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .hero-section.active {
+        gap: 24px;
     }
 
     h1 {
-        font-size: 2.2rem; /* Сделали буквы аккуратнее на экранах смартфонов */
+        font-size: 2.2rem;
     }
 
     .hero-metrics {
-        left: 14px;
-        right: 14px;
-        bottom: 52px;
         grid-template-columns: 1fr;
-        width: auto;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .hero-metrics div {
+        padding: 12px 16px;
     }
 
     .signal-band {
-        transform: none;
-        padding: 12px 14px 0;
+        padding: 10px 14px;
     }
 
     .signal-band div {
@@ -862,7 +872,13 @@ h3 {
     }
 
     .signal-band span {
+        font-size: 0.8rem;
+        padding: 10px;
         border-bottom: 1px solid var(--line);
+    }
+
+    .signal-band span:nth-child(even) {
+        border-right: none;
     }
 
     .section-head {
