@@ -106,6 +106,7 @@ function toggleNav() {
     if (nav) nav.classList.toggle('active');
 }
 
+// Оживляем вообще все элементы с атрибутом data-section на странице
 function bindNavigation() {
     document.querySelectorAll('[data-section]').forEach(el => {
         el.addEventListener('click', event => {
