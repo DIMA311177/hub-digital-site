@@ -1,3 +1,4 @@
+/* global supabase */
 // ==================== НАСТРОЙКА SUPABASE ====================
 const SUPABASE_URL = 'https://iwcbyzpyayaryxtgugjr.supabase.co'; 
 const SUPABASE_ANON_KEY = 'sb_publishable_7YFjuzQ518cbbY0dg34p4A_8ZTcUTvj';
