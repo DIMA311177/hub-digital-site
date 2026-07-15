@@ -1,83 +1,63 @@
-const TICKETS_KEY = 'vpn_tickets_v1';
-const PROFILE_KEY = 'vpn_profile_v1';
+// ==================== НАСТРОЙКА SUPABASE ====================
+// Твои личные данные для подключения к созданной базе
+const SUPABASE_URL = 'https://iwcbyzpyayaryxtgugjr.supabase.co'; 
+const SUPABASE_ANON_KEY = 'sb_publishable_7YFjuzQ518cbbY0dg34p4A_8ZTcUTvj';
 
-const seedTickets = [
-    {
-        id: 'VPN-1001',
-        name: 'Дмитрий',
-        contact: '@dmitry_dev',
-        service: 'Проблема с подключением',
-        text: 'Не подключается к серверу в Германии через мобильный интернет. На домашнем Wi-Fi всё работает супер.',
-        status: 'work',
-        createdAt: '2026-07-15T13:20:00Z'
-    }
-];
+// Инициализируем клиент Supabase
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ============================================================
 
-const tariffData = {
-    monthly: {
-        title: 'Тариф «Старт» (1 месяц)',
-        badge: 'Популярно',
-        text: 'Доступ ко всем локациям, скорость до 100 Мбит/с, 1 устройство. Идеально для быстрого теста.',
-        result: 'Быстрый и безопасный интернет на месяц за 190₽.'
+const PROFILE_KEY = 'hubdigital_profile_v1';
+
+const caseData = {
+    clinic: {
+        title: 'Сайт клиники с заявками',
+        badge: 'Запись клиентов',
+        text: 'Структура услуг, карточки специалистов, формы записи и уведомления администратору. Такой формат подходит для медицинских центров, салонов и частных специалистов.',
+        result: 'Быстрый путь от просмотра услуги до заявки.'
     },
-    halfyear: {
-        title: 'Тариф «Оптимум» (6 месяцев)',
-        badge: 'Выгодно',
-        text: 'Доступ ко всем локациям, скорость до 300 Мбит/с, до 3 устройств одновременно.',
-        result: 'Экономия 30%. Полная свобода без ограничений за 890₽.'
+    agency: {
+        title: 'Портал агентства',
+        badge: 'B2B',
+        text: 'Услуги, портфолио, личный кабинет клиента, база знаний и заявочная система в одном интерфейсе.',
+        result: 'Меньше ручных переписок, больше прозрачности для клиента.'
     },
-    yearly: {
-        title: 'Тариф «Ультра» (1 год)',
-        badge: 'Максимальный сейв',
-        text: 'Максимальный приоритет в сети, скорость до 1 Гбит/с, до 5 устройств. Выделенный IP по запросу.',
-        result: 'Скидка 50%. Бескомпромиссная защита на целый год за 1490₽.'
+    shop: {
+        title: 'Каталог услуг и оплат',
+        badge: 'Продажи',
+        text: 'Тарифы, пакеты, формы заказа, статусы и понятный путь к повторной покупке.',
+        result: 'Удобнее продавать услуги и вести текущих клиентов.'
     }
 };
 
 const articleData = {
-    setup: {
-        title: 'Как настроить VPN на телефоне?',
-        text: 'Скачайте приложение WireGuard или OpenVPN в App Store / Google Play. Перейдите в личный кабинет на нашем сайте, скачайте файл конфигурации (.conf / .ovpn) и просто импортируйте его в установленное приложение. Подключение произойдет автоматически.'
+    brief: {
+        title: 'Как подготовить ТЗ без сложных слов',
+        text: 'Опишите цель проекта, кто будет пользоваться сайтом, какие действия должны быть на странице и какие примеры вам нравятся. Этого достаточно, чтобы начать прототип.'
     },
-    servers: {
-        title: 'Какие локации доступны?',
-        text: 'На наших премиум тарифах доступны сверхбыстрые серверы в Германии, Нидерландах, Финляндии, Турции, Казахстане, ОАЭ и США. Список пополняется каждый месяц.'
+    domain: {
+        title: 'Что нужно для запуска на домене',
+        text: 'Нужен домен, доступ к DNS, хостинг или GitHub Pages, а также проверка HTTPS. Для hub-digital.ru уже используется рабочий домен.'
     },
-    speed: {
-        title: 'Падает ли скорость при работе?',
-        text: 'Наши серверы подключены к гигабитным каналам. Потери скорости минимизированы с помощью современного протокола шифрования и составляют не более 5-10% от базовой скорости вашего провайдера.'
+    cabinet: {
+        title: 'Зачем бизнесу личный кабинет',
+        text: 'Кабинет помогает клиенту видеть статусы заявок, документы, этапы проекта и историю общения без хаоса в мессенджерах.'
+    },
+    support: {
+        title: 'Как работает поддержка после релиза',
+        text: 'После запуска можно вести правки через заявки: новый блок, текст, фото, ошибка, интеграция или небольшое улучшение.'
     }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    ensureTickets();
     bindNavigation();
     bindFaq();
     bindTicketForm();
     bindAccount();
-    renderTickets();
+    renderTickets(); // Загружаем тикеты из Supabase
     renderProfile();
     showSection('home');
 });
-
-function ensureTickets() {
-    if (!localStorage.getItem(TICKETS_KEY)) {
-        localStorage.setItem(TICKETS_KEY, JSON.stringify(seedTickets));
-    }
-}
-
-function getTickets() {
-    try {
-        const tickets = JSON.parse(localStorage.getItem(TICKETS_KEY));
-        return Array.isArray(tickets) ? tickets : [];
-    } catch (e) {
-        return [];
-    }
-}
-
-function saveTickets(tickets) {
-    localStorage.setItem(TICKETS_KEY, JSON.stringify(tickets));
-}
 
 function toggleNav() {
     const nav = document.getElementById('main-nav');
@@ -116,90 +96,213 @@ function bindFaq() {
     });
 }
 
+// ============== РАБОТА С ЗАЯВКАМИ/ТИКЕТАМИ (SUPABASE) ==============
+
 function bindTicketForm() {
     const form = document.getElementById('ticketForm');
     if (!form) return;
 
-    form.addEventListener('submit', event => {
+    form.addEventListener('submit', async event => {
         event.preventDefault();
 
-        const ticket = {
-            id: makeTicketId(),
-            name: document.getElementById('ticketName').value.trim(),
-            contact: document.getElementById('ticketContact').value.trim(),
-            service: document.getElementById('ticketService').value,
-            text: document.getElementById('ticketText').value.trim(),
-            status: 'new',
-            createdAt: new Date().toISOString()
-        };
+        const name = document.getElementById('ticketName').value.trim();
+        const contact = document.getElementById('ticketContact').value.trim();
+        const service = document.getElementById('ticketService').value;
+        const text = document.getElementById('ticketText').value.trim();
 
-        const tickets = getTickets();
-        tickets.unshift(ticket);
-        saveTickets(tickets);
-        form.reset();
-        renderTickets();
-        showToast('Тикет успешно отправлен в поддержку!');
+        showToast('Отправка заявки...');
+
+        // Записываем тикет напрямую в Supabase таблицу vpn_tickets
+        const { data, error } = await supabase
+            .from('vpn_tickets')
+            .insert([
+                { name, contact, service, text, status: 'new' }
+            ]);
+
+        if (error) {
+            console.error('Ошибка Supabase:', error);
+            showToast('Ошибка при отправке: ' + error.message);
+        } else {
+            form.reset();
+            await renderTickets(); // Перерисовываем список свежими данными
+            showToast('Заявка успешно отправлена в базу данных!');
+        }
     });
 }
 
-function makeTicketId() {
-    const number = 1000 + getTickets().length + 1;
-    return `VPN-${number}`;
-}
-
-function renderTickets() {
+async function renderTickets() {
     const list = document.getElementById('ticketList');
     if (!list) return;
 
-    const tickets = getTickets();
-    if (!tickets.length) {
-        list.innerHTML = '<p class="ticket">Активных обращений нет.</p>';
+    // Читаем из базы список тикетов, сортируя их по id в обратном порядке (новые вверху)
+    const { data: tickets, error } = await supabase
+        .from('vpn_tickets')
+        .select('*')
+        .order('id', { ascending: false });
+
+    if (error) {
+        console.error('Ошибка получения данных:', error);
+        list.innerHTML = '<p class="ticket">Не удалось загрузить обращения.</p>';
+        return;
+    }
+
+    const ticketCount = document.getElementById('ticketCount');
+    if (ticketCount) {
+        ticketCount.textContent = String(tickets ? tickets.length : 0);
+    }
+
+    if (!tickets || !tickets.length) {
+        list.innerHTML = '<p class="ticket">Заявок пока нет.</p>';
         return;
     }
 
     list.innerHTML = tickets.map(ticket => `
         <article class="ticket">
             <div class="ticket-head">
-                <strong>${escapeHtml(ticket.id)} · ${escapeHtml(ticket.service)}</strong>
+                <strong>HD-${ticket.id} · ${escapeHtml(ticket.service)}</strong>
                 <span class="status status-${ticket.status}">${statusLabel(ticket.status)}</span>
             </div>
             <p>${escapeHtml(ticket.text)}</p>
-            <small>${escapeHtml(ticket.name)} · ${escapeHtml(ticket.contact)} · ${formatDate(ticket.createdAt)}</small>
+            <small>${escapeHtml(ticket.name)} · ${escapeHtml(ticket.contact)} · ${formatDate(ticket.created_at)}</small>
+            <div class="ticket-actions">
+                <button class="btn ghost btn-compact" onclick="setTicketStatus(${ticket.id}, 'new')">Новая</button>
+                <button class="btn ghost btn-compact" onclick="setTicketStatus(${ticket.id}, 'work')">В работе</button>
+                <button class="btn ghost btn-compact" onclick="setTicketStatus(${ticket.id}, 'done')">Закрыть</button>
+            </div>
         </article>
     `).join('');
 }
 
 function statusLabel(status) {
-    if (status === 'work') return 'В обработке';
-    if (status === 'done') return 'Решено';
-    return 'Новый';
+    if (status === 'work') return 'В работе';
+    if (status === 'done') return 'Закрыта';
+    return 'Новая';
 }
 
-function clearClosedTickets() {
-    const active = getTickets().filter(ticket => ticket.status !== 'done');
-    saveTickets(active);
-    renderTickets();
-    showToast('Закрытые тикеты очищены.');
+async function setTicketStatus(id, status) {
+    showToast('Обновление статуса...');
+    
+    const { error } = await supabase
+        .from('vpn_tickets')
+        .update({ status })
+        .eq('id', id);
+
+    if (error) {
+        showToast('Ошибка обновления: ' + error.message);
+    } else {
+        await renderTickets();
+        showToast(`Статус HD-${id} успешно обновлён.`);
+    }
 }
+
+async function clearClosedTickets() {
+    showToast('Очистка...');
+
+    // Удаляем из облака решенные заявки (со статусом 'done')
+    const { error } = await supabase
+        .from('vpn_tickets')
+        .delete()
+        .eq('status', 'done');
+
+    if (error) {
+        showToast('Ошибка удаления: ' + error.message);
+    } else {
+        await renderTickets();
+        showToast('Закрытые заявки очищены из базы.');
+    }
+}
+
+function prefillTicket(service) {
+    showSection('support');
+    const select = document.getElementById('ticketService');
+    if (select) select.value = service;
+    const text = document.getElementById('ticketText');
+    if (text && !text.value) text.value = `Интересует услуга: ${service}. Нужно обсудить детали проекта.`;
+    document.getElementById('ticketName')?.focus();
+}
+
+// ============== ЛИЧНЫЙ КАБИНЕТ (SUPABASE + LOCALSTORAGE) ==============
 
 function bindAccount() {
     const loginForm = document.getElementById('loginForm');
-    const panel = document.getElementById('profilePanel');
+    const profileForm = document.getElementById('profileForm');
     const logoutBtn = document.getElementById('logoutBtn');
 
     if (loginForm) {
-        loginForm.addEventListener('submit', event => {
+        loginForm.addEventListener('submit', async event => {
             event.preventDefault();
-            const profile = {
-                name: document.getElementById('loginName').value.trim(),
-                email: document.getElementById('loginEmail').value.trim(),
-                tariff: 'Демо-доступ (3 дня)',
-                expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('ru-RU'),
-                balance: '0₽'
-            };
-            localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+            
+            const name = document.getElementById('loginName').value.trim();
+            const email = document.getElementById('loginEmail').value.trim();
+            const company = document.getElementById('loginCompany').value.trim();
+
+            showToast('Вход в систему...');
+
+            // Ищем пользователя по Email
+            let { data: user, error } = await supabase
+                .from('vpn_users')
+                .select('*')
+                .eq('email', email)
+                .single();
+
+            // Если пользователя нет — регистрируем в базе данных
+            if (!user) {
+                const { data: newUser, error: createError } = await supabase
+                    .from('vpn_users')
+                    .insert([
+                        { 
+                            name: name, 
+                            email: email, 
+                            tariff: company, // Поле компании запишем в tariff или сохраним в структуре
+                            balance: 'Активен'
+                        }
+                    ])
+                    .select()
+                    .single();
+
+                if (createError) {
+                    showToast('Ошибка создания профиля: ' + createError.message);
+                    return;
+                }
+                user = newUser;
+            }
+
+            // Локально сохраняем токен авторизации
+            localStorage.setItem(PROFILE_KEY, JSON.stringify({
+                name: user.name,
+                email: user.email,
+                company: user.tariff,
+                about: user.balance
+            }));
+
             renderProfile();
-            showToast('Вход успешно выполнен!');
+            showToast('Кабинет успешно создан в облаке!');
+        });
+    }
+
+    if (profileForm) {
+        profileForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const profile = getProfile();
+            if (!profile) return;
+
+            const aboutText = document.getElementById('aboutText').value.trim();
+            profile.about = aboutText;
+
+            showToast('Сохранение...');
+
+            // Синхронизируем описание бизнеса с полем balance (или expires) в БД
+            const { error } = await supabase
+                .from('vpn_users')
+                .update({ balance: aboutText })
+                .eq('email', profile.email);
+
+            if (error) {
+                showToast('Ошибка сохранения: ' + error.message);
+            } else {
+                localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+                showToast('Описание бизнеса сохранено в БД.');
+            }
         });
     }
 
@@ -207,7 +310,7 @@ function bindAccount() {
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem(PROFILE_KEY);
             renderProfile();
-            showToast('Вы вышли из аккаунта.');
+            showToast('Вы вышли из кабинета.');
         });
     }
 }
@@ -234,92 +337,29 @@ function renderProfile() {
     document.getElementById('profileAvatar').textContent = getInitials(profile.name);
     document.getElementById('profileName').textContent = profile.name;
     document.getElementById('profileEmail').textContent = profile.email;
-    document.getElementById('profileTariff').textContent = profile.tariff;
-    document.getElementById('profileExpires').textContent = profile.expires;
-    document.getElementById('profileBalance').textContent = profile.balance;
-}
-
-function buyTariff(tariffKey) {
-    const profile = getProfile();
-    if (!profile) {
-        showSection('account');
-        showToast('Сначала войдите в аккаунт!');
-        return;
-    }
-
-    const t = tariffData[tariffKey];
-    profile.tariff = t.title;
-    
-    const expDate = new Date();
-    if (tariffKey === 'monthly') expDate.setMonth(expDate.getMonth() + 1);
-    if (tariffKey === 'halfyear') expDate.setMonth(expDate.getMonth() + 6);
-    if (tariffKey === 'yearly') expDate.setFullYear(expDate.getFullYear() + 1);
-    
-    profile.expires = expDate.toLocaleDateString('ru-RU');
-    profile.balance = 'Оплачено';
-    
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-    renderProfile();
-    showSection('account');
-    showToast(`Тариф "${t.title}" успешно активирован!`);
-}
-
-function downloadConfig() {
-    const profile = getProfile();
-    if (!profile) {
-        showToast('Ошибка: необходимо войти в аккаунт.');
-        return;
-    }
-    
-    showToast('Скачивание конфигурации...');
-    const configContent = `client
-dev tun
-proto udp
-remote 185.220.101.5 1194
-resolv-retry infinite
-nobind
-persist-key
-persist-tun
-remote-cert-tls server
-cipher AES-256-GCM
-auth SHA256
-key-direction 1
-# Данные пользователя: ${profile.name} (${profile.email})
-<ca>
------BEGIN CERTIFICATE-----
-MIIB7TCCAZegAwIBAgIJAP9Z4dG... (fake certificate key)
------END CERTIFICATE-----
-</ca>
-`;
-
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(configContent));
-    element.setAttribute('download', `shield_vpn_${profile.name}.ovpn`);
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    document.getElementById('profileCompany').textContent = profile.company;
+    document.getElementById('aboutText').value = profile.about || '';
 }
 
 function getInitials(name) {
-    return (name || 'VP')
+    return (name || 'HD')
         .split(/\s+/)
         .filter(Boolean)
         .slice(0, 2)
         .map(part => part[0])
         .join('')
-        .toUpperCase() || 'VP';
+        .toUpperCase() || 'HD';
 }
 
-function showTariff(id) {
-    const item = tariffData[id];
+function showCase(id) {
+    const item = caseData[id];
     if (!item) return;
     openModal(`
         <span class="badge">${escapeHtml(item.badge)}</span>
-        <h2 style="margin: 15px 0;">${escapeHtml(item.title)}</h2>
+        <h2>${escapeHtml(item.title)}</h2>
         <p>${escapeHtml(item.text)}</p>
-        <p style="margin-top: 15px;"><strong>Преимущество:</strong> ${escapeHtml(item.result)}</p>
-        <button class="btn primary" style="margin-top: 20px; width: 100%;" onclick="closeModal(); buyTariff('${id}')">Активировать подписку</button>
+        <p><strong>Результат:</strong> ${escapeHtml(item.result)}</p>
+        <button class="btn primary" onclick="closeModal(); prefillTicket('${escapeAttr(item.title)}')">Хочу похожий проект</button>
     `);
 }
 
@@ -329,7 +369,7 @@ function showArticle(id) {
     openModal(`
         <p class="overline">База знаний</p>
         <h2>${escapeHtml(article.title)}</h2>
-        <p style="margin-top: 15px; line-height: 1.6;">${escapeHtml(article.text)}</p>
+        <p>${escapeHtml(article.text)}</p>
     `);
 }
 
@@ -375,6 +415,10 @@ function escapeHtml(value) {
         .replaceAll('>', '&gt;')
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#039;');
+}
+
+function escapeAttr(value) {
+    return escapeHtml(value).replaceAll('`', '&#096;');
 }
 
 window.addEventListener('keydown', event => {
