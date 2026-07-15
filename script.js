@@ -39,35 +39,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     await checkUserSession();
     
     renderTickets(); // Загружаем тикеты поддержки
-    showSection('home');
+    showSection('home'); // Открываем главную страницу по умолчанию
 });
 
+// Переключение мобильного меню
 function toggleNav() {
     const nav = document.getElementById('main-nav');
-    if (nav) nav.classList.toggle('active');
+    if (nav) {
+        nav.classList.toggle('active');
+    }
 }
 
+// НАВИГАЦИЯ МЕЖДУ СЕКЦИЯМИ (КЛИКИ ПО МЕНЮ И КНОПКАМ)
 function bindNavigation() {
-    document.querySelectorAll('[data-section]').forEach(el => {
-        el.addEventListener('click', event => {
-            const target = el.getAttribute('data-section');
-            if (!target) return;
+    // Вешаем обработчик клика на любой элемент с атрибутом data-section
+    document.body.addEventListener('click', event => {
+        const targetEl = event.target.closest('[data-section]');
+        if (targetEl) {
             event.preventDefault();
-            showSection(target);
-        });
+            const sectionId = targetEl.getAttribute('data-section');
+            if (sectionId) {
+                showSection(sectionId);
+            }
+        }
     });
 }
 
 function showSection(id) {
+    // Скрываем все секции и показываем только нужную
     document.querySelectorAll('.section').forEach(section => {
         section.classList.toggle('active', section.id === id);
     });
+
+    // Обновляем активный класс для ссылок в шапке сайта
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.toggle('active', link.getAttribute('data-section') === id);
     });
 
+    // Скрываем мобильное меню после выбора раздела
     const nav = document.getElementById('main-nav');
-    if (nav) nav.classList.remove('active');
+    if (nav) {
+        nav.classList.remove('active');
+    }
+
+    // Плавно скроллим страницу вверх
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -203,12 +218,10 @@ function prefillTicket(service) {
 
 // ============== НАСТОЯЩАЯ АВТОРИЗАЦИЯ (SUPABASE AUTH) ==============
 
-// Функция проверки сессии при загрузке страницы
 async function checkUserSession() {
     const { data: { session }, error } = await supabase.auth.getSession();
     
     if (session && session.user) {
-        // Получаем дополнительную инфу о пользователе из таблицы vpn_users
         let { data: userProfile } = await supabase
             .from('vpn_users')
             .select('*')
@@ -247,7 +260,7 @@ function bindAccount() {
             });
 
             if (signInError) {
-                // 2. Если пользователя нет в системе (Invalid login credentials), регистрируем его
+                // 2. Если пользователя нет (Invalid login credentials), регистрируем его
                 if (signInError.message.includes('Invalid login credentials') || signInError.status === 400) {
                     showToast('Регистрация нового пользователя...');
                     
@@ -264,7 +277,7 @@ function bindAccount() {
                         return;
                     }
 
-                    // Рассчитываем дату окончания демо-доступа (3 дня)
+                    // Дата окончания демо-доступа
                     const expireDate = new Date();
                     expireDate.setDate(expireDate.getDate() + 3);
                     const formattedDate = expireDate.toISOString().split('T')[0];
@@ -296,7 +309,7 @@ function bindAccount() {
                     showToast('Ошибка авторизации: ' + signInError.message);
                 }
             } else {
-                // Успешный вход существующего пользователя
+                // Успешный вход
                 let { data: userProfile } = await supabase
                     .from('vpn_users')
                     .select('*')
@@ -361,7 +374,7 @@ function bindAccount() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
             showToast('Выход...');
-            await supabase.auth.signOut(); // Выходим из сессии Supabase
+            await supabase.auth.signOut();
             localStorage.removeItem(PROFILE_KEY);
             renderProfile();
             showToast('Вы вышли из аккаунта.');
@@ -400,11 +413,6 @@ function renderProfile() {
             <strong>Действует до:</strong> ${profile.expires ? formatDateOnly(profile.expires) : 'Не установлено'}
         `;
     }
-    
-    const aboutLabel = document.querySelector('label[for="aboutText"]');
-    if (aboutLabel) aboutLabel.textContent = 'Активировать промокод:';
-    const aboutInput = document.getElementById('aboutText');
-    if (aboutInput) aboutInput.placeholder = 'Например, SHIELD500';
 }
 
 function getInitials(name) {
@@ -429,7 +437,6 @@ function showCase(id) {
     `);
 }
 
-// Модальное окно
 function openModal(html) {
     const modal = document.getElementById('modal');
     const body = document.getElementById('modal-body');
