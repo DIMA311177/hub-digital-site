@@ -1,1062 +1,224 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🔒 VPN Hub — защищённый доступ</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shield VPN — Безопасный и быстрый доступ</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        /* ===== ОБЩИЕ СТИЛИ ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0a0e17;
-            color: #e8edf5;
-            min-height: 100vh;
-            background-image: radial-gradient(ellipse at 20% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
-        }
-
-        /* ===== ХЕДЕР ===== */
-        header {
-            background: rgba(10, 14, 23, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .logo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .logo span {
-            color: #10b981;
-        }
-
-        nav {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        nav button {
-            background: transparent;
-            border: none;
-            color: #8892a8;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-
-        nav button:hover {
-            color: #e8edf5;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        nav button.active {
-            color: #10b981;
-            background: rgba(16, 185, 129, 0.12);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
-        /* ===== КНОПКИ ===== */
-        .btn {
-            padding: 0.6rem 1.4rem;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: #10b981;
-            color: #0a0e17;
-        }
-
-        .btn-primary:hover {
-            background: #059669;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: #e8edf5;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .btn-ghost:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.25);
-        }
-
-        .btn-danger {
-            background: #ef4444;
-            color: #fff;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-
-        .btn-sm {
-            padding: 0.35rem 0.9rem;
-            font-size: 0.85rem;
-        }
-
-        /* ===== ОСНОВНАЯ ЧАСТЬ ===== */
-        main {
-            max-width: 1100px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-        }
-
-        .section {
-            display: none;
-            animation: fadeIn 0.35s ease;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, #8892a8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        p {
-            color: #8892a8;
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero {
-            padding: 2rem 0;
-        }
-
-        .hero .badge-hero {
-            display: inline-block;
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        /* ===== КАРТОЧКИ ТАРИФОВ ===== */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.25s;
-            backdrop-filter: blur(4px);
-        }
-
-        .card:hover {
-            border-color: rgba(16, 185, 129, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .card .badge {
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 0.75rem;
-        }
-
-        .card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .card .price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #10b981;
-            margin: 1rem 0;
-        }
-
-        .card ul {
-            list-style: none;
-            margin: 1rem 0;
-        }
-
-        .card ul li {
-            padding: 0.3rem 0;
-            color: #8892a8;
-            font-size: 0.95rem;
-        }
-
-        .card ul li::before {
-            content: "✓ ";
-            color: #10b981;
-        }
-
-        /* ===== ФОРМЫ ===== */
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-width: 420px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 2rem;
-            border-radius: 16px;
-        }
-
-        form input,
-        form select,
-        form textarea {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
-            color: #e8edf5;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        form input:focus,
-        form select:focus,
-        form textarea:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
-        }
-
-        form textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        form label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #8892a8;
-        }
-
-        form small {
-            color: #5a6a7e;
-            font-size: 0.85rem;
-        }
-
-        /* ===== ПРОФИЛЬ ===== */
-        .profile-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 450px;
-        }
-
-        .profile-card .avatar {
-            width: 72px;
-            height: 72px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #0a0e17;
-            margin-bottom: 1rem;
-        }
-
-        .profile-card .field {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .profile-card .field span:first-child {
-            color: #8892a8;
-        }
-
-        .profile-card .field span:last-child {
-            font-weight: 500;
-        }
-
-        .profile-card .actions {
-            margin-top: 1.5rem;
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        /* ===== ТИКЕТЫ ===== */
-        .ticket-list {
-            margin-top: 1.5rem;
-        }
-
-        .ticket {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .ticket .head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .ticket .head strong {
-            font-size: 1rem;
-        }
-
-        .status {
-            padding: 0.15rem 0.7rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .status-new {
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-        }
-
-        .status-work {
-            background: rgba(245, 158, 11, 0.15);
-            color: #f59e0b;
-        }
-
-        .status-done {
-            background: rgba(107, 114, 128, 0.15);
-            color: #6b7280;
-        }
-
-        .ticket p {
-            font-size: 0.95rem;
-            color: #c8d0dc;
-        }
-
-        .ticket small {
-            color: #5a6a7e;
-            font-size: 0.8rem;
-        }
-
-        /* ===== TOAST ===== */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: #10b981;
-            color: #0a0e17;
-            padding: 0.8rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 600;
-            z-index: 999;
-            animation: slideUp 0.3s ease;
-        }
-
-        .toast.error {
-            background: #ef4444;
-            color: #fff;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ===== МОБИЛА ===== */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.5rem;
-                padding: 0.75rem 1rem;
-            }
-
-            nav {
-                justify-content: center;
-            }
-
-            nav button {
-                padding: 0.35rem 0.7rem;
-                font-size: 0.85rem;
-            }
-
-            .header-actions {
-                justify-content: center;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-            form {
-                max-width: 100%;
-                padding: 1.25rem;
-            }
-
-            .profile-card {
-                max-width: 100%;
-            }
-        }
-    </style>
 </head>
 <body>
 
-    <!-- ===== ХЕДЕР ===== -->
     <header>
-        <div class="logo">🔒 <span>VPN</span> Hub</div>
-        <nav id="main-nav">
-            <button class="nav-link active" data-section="home">Главная</button>
-            <button class="nav-link" data-section="tariffs">Тарифы</button>
-            <button class="nav-link" data-section="support">Поддержка</button>
-            <button class="nav-link" data-section="account">Кабинет</button>
-        </nav>
-        <div class="header-actions">
-            <button class="btn btn-ghost btn-sm" data-section="account" id="headerLoginBtn">Войти</button>
+        <div class="header-container">
+            <a href="#" class="logo" data-section="home">
+                <span>🛡️</span> Shield VPN
+            </a>
+            <button class="menu-toggle" onclick="toggleNav()">☰</button>
+            <nav id="main-nav">
+                <a href="#" class="nav-link active" data-section="home">Главная</a>
+                <a href="#" class="nav-link" data-section="tariffs">Тарифы</a>
+                <a href="#" class="nav-link" data-section="support">Поддержка</a>
+                <a href="#" class="nav-link" data-section="account">Кабинет</a>
+            </nav>
         </div>
     </header>
 
-    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
     <main>
 
-        <!-- ===== ГЛАВНАЯ ===== -->
-        <section id="home" class="section active hero">
-            <span class="badge-hero">🚀 Безлимитный трафик</span>
-            <h1>Быстрый VPN <br/>с защитой 24/7</h1>
-            <p>Скорость до 1 Гбит/с, защита от отслеживания, доступ к контенту со всего мира.</p>
-            <button class="btn btn-primary" data-section="tariffs">Выбрать тариф</button>
-        </section>
-
-        <!-- ===== ТАРИФЫ ===== -->
-        <section id="tariffs" class="section">
-            <h2>Тарифы</h2>
-            <div class="grid">
-                <div class="card">
-                    <span class="badge">Бесплатно</span>
-                    <h3>Демо</h3>
-                    <div class="price">0 ₽</div>
-                    <ul>
-                        <li>3 дня</li>
-                        <li>1 устройство</li>
-                        <li>До 50 Мбит/с</li>
-                    </ul>
-                    <button class="btn btn-ghost" onclick="selectTariff('Демо')">Попробовать</button>
-                </div>
-                <div class="card">
-                    <span class="badge">🔥 Популярный</span>
-                    <h3>Стандарт</h3>
-                    <div class="price">499 ₽</div>
-                    <ul>
-                        <li>30 дней</li>
-                        <li>До 5 устройств</li>
-                        <li>Безлимитный трафик</li>
-                        <li>Автовыбор сервера</li>
-                    </ul>
-                    <button class="btn btn-primary" onclick="selectTariff('Стандарт')">Купить</button>
-                </div>
-                <div class="card">
-                    <span class="badge">⭐ VIP</span>
-                    <h3>Премиум</h3>
-                    <div class="price">1 290 ₽</div>
-                    <ul>
-                        <li>90 дней</li>
-                        <li>До 10 устройств</li>
-                        <li>Выделенный IP</li>
-                        <li>Приоритетный канал</li>
-                        <li>Поддержка 24/7</li>
-                    </ul>
-                    <button class="btn btn-primary" onclick="selectTariff('Премиум')">Купить</button>
+        <section id="home" class="section active">
+            <div class="hero-section">
+                <h1>Безопасность без компромиссов</h1>
+                <p>Высокоскоростной зашифрованный доступ в интернет из любой точки мира. Обход блокировок, защита личных данных и нулевые логи активности.</p>
+                <div class="hero-actions">
+                    <button class="btn primary" data-section="tariffs">Выбрать тариф</button>
+                    <button class="btn ghost" data-section="account">Личный кабинет</button>
                 </div>
             </div>
         </section>
 
-        <!-- ===== ПОДДЕРЖКА ===== -->
-        <section id="support" class="section">
-            <h2>Техподдержка</h2>
-            <p>Опишите проблему — мы поможем в течение 15 минут</p>
+        <section id="tariffs" class="section">
+            <h2>Наши тарифные планы</h2>
+            <p>Выберите наиболее подходящий вариант подключения. Активация происходит мгновенно.</p>
+            
+            <div class="grid">
+                <div class="card">
+                    <div>
+                        <span class="badge">Попробовать</span>
+                        <h3>Демо-доступ</h3>
+                        <p>Тестовый период для проверки скорости.</p>
+                        <h4 class="price">0₽ <span>/ 3 дня</span></h4>
+                    </div>
+                    <button class="btn ghost" onclick="showCase('clinic')">Подробнее</button>
+                </div>
 
-            <form id="ticketForm">
-                <input id="ticketName" type="text" placeholder="Ваше имя" required />
-                <input id="ticketContact" type="text" placeholder="Telegram или email" required />
-                <select id="ticketService" required>
-                    <option value="">Выберите тему</option>
-                    <option>Подключение VPN</option>
-                    <option>Скорость интернета</option>
-                    <option>Оплата</option>
-                    <option>Техническая проблема</option>
-                    <option>Другое</option>
-                </select>
-                <textarea id="ticketText" placeholder="Опишите подробно..." required></textarea>
-                <button class="btn btn-primary" type="submit">Отправить заявку</button>
-            </form>
+                <div class="card featured">
+                    <div>
+                        <span class="badge">Популярно</span>
+                        <h3>Стандарт</h3>
+                        <p>Оптимальный баланс для повседневного использования.</p>
+                        <h4 class="price">199₽ <span>/ месяц</span></h4>
+                    </div>
+                    <button class="btn primary" onclick="showCase('agency')">Подробнее</button>
+                </div>
 
-            <div id="ticketList" class="ticket-list"></div>
+                <div class="card">
+                    <div>
+                        <span class="badge">Максимум</span>
+                        <h3>Премиум</h3>
+                        <p>Максимальный приоритет скорости и выделенный IP.</p>
+                        <h4 class="price">499₽ <span>/ 3 месяца</span></h4>
+                    </div>
+                    <button class="btn ghost" onclick="showCase('shop')">Подробнее</button>
+                </div>
+            </div>
         </section>
 
-        <!-- ===== ЛИЧНЫЙ КАБИНЕТ ===== -->
+        <section id="support" class="section">
+            <div class="support-layout">
+                <div class="support-form-card">
+                    <h2>Служба поддержки</h2>
+                    <p>Возникли проблемы с подключением или настройкой? Напишите нам, мы поможем!</p>
+                    
+                    <form id="ticketForm" class="styled-form">
+                        <div class="form-group" id="nonAuthFields">
+                            <label for="ticketName">Ваше имя</label>
+                            <input type="text" id="ticketName" placeholder="Дмитрий">
+                            
+                            <label for="ticketContact">Email для связи</label>
+                            <input type="email" id="ticketContact" placeholder="your@mail.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ticketService">Тема обращения</label>
+                            <select id="ticketService">
+                                <option value="Подключение">Не подключается VPN</option>
+                                <option value="Скорость">Низкая скорость работы</option>
+                                <option value="Оплата">Проблема с балансом/тарифом</option>
+                                <option value="Другое">Другой вопрос</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ticketText">Суть проблемы</label>
+                            <textarea id="ticketText" rows="5" placeholder="Опишите вашу проблему подробно..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn primary">Отправить тикет</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
         <section id="account" class="section">
-            <h2>Личный кабинет</h2>
+            <div class="account-container">
+                
+                <div id="loginCard" class="auth-card">
+                    <h2 id="authFormTitle">Вход в систему</h2>
+                    <p class="auth-subtitle">Управляйте своими подписками и ключами Shield VPN</p>
+                    
+                    <form id="loginForm" class="styled-form">
+                        <div class="form-group" id="nameFieldGroup" style="display: none;">
+                            <label for="loginName">Как к вам обращаться</label>
+                            <input type="text" id="loginName" placeholder="Дмитрий">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginEmail">Электронная почта</label>
+                            <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                        </div>
 
-            <!-- Форма входа -->
-            <form id="loginForm">
-                <input id="loginName" type="text" placeholder="Имя" required />
-                <input id="loginEmail" type="email" placeholder="Email" required />
-                <input id="loginPassword" type="password" placeholder="Пароль (мин. 6 символов)" required />
-                <input id="loginCompany" type="text" placeholder="Компания (опционально)" />
-                <button class="btn btn-primary" type="submit">Войти / Создать аккаунт</button>
-                <small>🔐 Все данные защищены и хранятся в облаке</small>
-            </form>
+                        <div class="form-group">
+                            <label for="loginPassword">Пароль</label>
+                            <input type="password" id="loginPassword" placeholder="••••••••" required>
+                        </div>
 
-            <!-- Профиль -->
-            <div id="profilePanel" style="display: none;">
-                <div class="profile-card">
-                    <div class="avatar" id="profileAvatar">U</div>
-                    <h3 id="profileName">Пользователь</h3>
-                    <p style="margin-bottom: 1rem; color: #8892a8;" id="profileEmail">email@mail.ru</p>
+                        <button type="submit" class="btn primary">Войти</button>
+                        <a href="#" id="toggleAuthMode" class="auth-toggle-link">Нет аккаунта? Зарегистрироваться</a>
+                    </form>
+                </div>
 
-                    <div class="field">
-                        <span>📊 Тариф</span>
-                        <span id="profileTariff">Демо</span>
-                    </div>
-                    <div class="field">
-                        <span>💰 Баланс</span>
-                        <span id="profileBalance">0 ₽</span>
-                    </div>
-                    <div class="field">
-                        <span>⏳ Действует до</span>
-                        <span id="profileExpires">—</span>
-                    </div>
-                    <div class="field">
-                        <span>🏢 Компания</span>
-                        <span id="profileCompany">—</span>
-                    </div>
+                <div id="profilePanel" style="display: none;">
+                    <div class="profile-layout">
+                        
+                        <div class="profile-card">
+                            <div class="profile-header-main">
+                                <div id="profileAvatar" class="avatar">U</div>
+                                <div class="user-meta">
+                                    <h3 id="profileName">Загрузка...</h3>
+                                    <span id="profileEmail">email@domain.com</span>
+                                </div>
+                            </div>
 
-                    <div class="actions">
-                        <button class="btn btn-danger btn-sm" id="logoutBtn">Выйти</button>
+                            <div class="profile-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Ваш тариф:</span>
+                                    <strong id="infoTariff">Демо-доступ (3 дня)</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Баланс аккаунта:</span>
+                                    <strong id="infoBalance" class="balance-text">0₽</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Действует до:</span>
+                                    <strong id="infoExpires">--.--.----</strong>
+                                </div>
+                            </div>
+
+                            <form id="profileForm" class="promo-form">
+                                <label for="aboutText">Активация промокода</label>
+                                <div class="promo-input-group">
+                                    <input type="text" id="aboutText" placeholder="Например: SHIELD500">
+                                    <button type="submit" class="btn primary btn-compact">ОК</button>
+                                </div>
+                            </form>
+
+                            <button id="logoutBtn" class="btn ghost btn-logout">Выйти из аккаунта</button>
+                        </div>
+
+                        <div class="profile-details-column">
+                            
+                            <div class="config-card">
+                                <h3>Параметры подключения</h3>
+                                <p>Скачайте конфигурационный файл для программы OpenVPN или WireGuard.</p>
+                                
+                                <div class="download-box">
+                                    <div class="form-group">
+                                        <label for="vpnProto">Протокол</label>
+                                        <select id="vpnProto">
+                                            <option value="ovpn">OpenVPN (.ovpn)</option>
+                                            <option value="conf">WireGuard (.conf)</option>
+                                        </select>
+                                    </div>
+                                    <button onclick="downloadConfig()" class="btn primary">
+                                        ⚡ Скачать файл конфигурации
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="user-tickets-card">
+                                <h3>Ваши обращения</h3>
+                                <div id="ticketList" class="user-tickets-list">
+                                    </div>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
+
             </div>
         </section>
 
     </main>
 
-    <!-- ===== СКРИПТ ===== -->
-    <script>
-        /* global supabase */
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
 
-        // ============================================================
-        //  НАСТРОЙКА SUPABASE
-        // ============================================================
-        const SUPABASE_URL = 'https://iwcbyzpyayaryxtgugjr.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_7YFjuzQ518cbbY0dg34p4A_8ZTcUTvj';
-
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const PROFILE_KEY = 'vpn_profile_v1';
-
-        // ============================================================
-        //  СОСТОЯНИЕ
-        // ============================================================
-        let currentUser = null;
-        let currentProfile = null;
-
-        // ============================================================
-        //  DOM-ЭЛЕМЕНТЫ
-        // ============================================================
-        const loginForm = document.getElementById('loginForm');
-        const profilePanel = document.getElementById('profilePanel');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const headerLoginBtn = document.getElementById('headerLoginBtn');
-
-        const profileAvatar = document.getElementById('profileAvatar');
-        const profileName = document.getElementById('profileName');
-        const profileEmail = document.getElementById('profileEmail');
-        const profileTariff = document.getElementById('profileTariff');
-        const profileBalance = document.getElementById('profileBalance');
-        const profileExpires = document.getElementById('profileExpires');
-        const profileCompany = document.getElementById('profileCompany');
-
-        // ============================================================
-        //  ИНИЦИАЛИЗАЦИЯ
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', async () => {
-            await checkSession();
-            bindAuthForms();
-            bindNavigation();
-            bindTicketForm();
-            renderTickets();
-
-            // Если есть hash с подтверждением — показываем уведомление
-            if (window.location.hash === '#confirmed') {
-                showToast('✅ Email подтверждён! Теперь войдите.');
-                window.location.hash = '';
-            }
-        });
-
-        // ============================================================
-        //  ПРОВЕРКА СЕССИИ
-        // ============================================================
-        async function checkSession() {
-            try {
-                const { data: { session }, error } = await supabaseClient.auth.getSession();
-                if (error) throw error;
-
-                if (session?.user) {
-                    currentUser = session.user;
-                    await loadProfile(session.user.id);
-                    renderProfile();
-                } else {
-                    currentUser = null;
-                    currentProfile = null;
-                    localStorage.removeItem(PROFILE_KEY);
-                    renderProfile();
-                }
-            } catch (err) {
-                console.error('Session error:', err);
-                currentUser = null;
-                currentProfile = null;
-                renderProfile();
-            }
-        }
-
-        // ============================================================
-        //  ЗАГРУЗКА ПРОФИЛЯ
-        // ============================================================
-        async function loadProfile(userId) {
-            try {
-                let { data: profile, error } = await supabaseClient
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', userId)
-                    .single();
-
-                if (error && error.code === 'PGRST116') {
-                    // Профиля нет — создаём
-                    const { data: newProfile, error: createError } = await supabaseClient
-                        .from('profiles')
-                        .insert([{
-                            id: userId,
-                            email: currentUser.email,
-                            full_name: currentUser.user_metadata?.full_name || 'Пользователь',
-                            company: currentUser.user_metadata?.company || 'Не указано',
-                            tariff: 'Демо',
-                            balance: 0,
-                            expires_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString()
-                        }])
-                        .select()
-                        .single();
-
-                    if (createError) throw createError;
-                    currentProfile = newProfile;
-                } else if (error) {
-                    throw error;
-                } else {
-                    currentProfile = profile;
-                }
-
-                localStorage.setItem(PROFILE_KEY, JSON.stringify(currentProfile));
-            } catch (err) {
-                console.error('Load profile error:', err);
-                showToast('❌ Ошибка загрузки профиля');
-                currentProfile = null;
-            }
-        }
-
-        // ============================================================
-        //  ОТРИСОВКА ПРОФИЛЯ
-        // ============================================================
-        function renderProfile() {
-            const isLoggedIn = currentUser !== null && currentProfile !== null;
-
-            // Показываем/скрываем
-            if (loginForm) loginForm.style.display = isLoggedIn ? 'none' : 'block';
-            if (profilePanel) profilePanel.style.display = isLoggedIn ? 'block' : 'none';
-            if (headerLoginBtn) {
-                headerLoginBtn.textContent = isLoggedIn ? '👤 ' + (currentProfile?.full_name || 'Профиль') : 'Войти';
-            }
-
-            if (!isLoggedIn || !currentProfile) return;
-
-            // Заполняем
-            const name = currentProfile.full_name || 'Пользователь';
-            if (profileAvatar) profileAvatar.textContent = name[0].toUpperCase();
-            if (profileName) profileName.textContent = name;
-            if (profileEmail) profileEmail.textContent = currentProfile.email;
-            if (profileTariff) profileTariff.textContent = currentProfile.tariff || 'Демо';
-            if (profileBalance) profileBalance.textContent = currentProfile.balance + ' ₽';
-            if (profileCompany) profileCompany.textContent = currentProfile.company || 'Не указано';
-            if (profileExpires) {
-                const date = currentProfile.expires_at ? new Date(currentProfile.expires_at) : null;
-                profileExpires.textContent = date ? date.toLocaleDateString('ru-RU') : 'Не ограничено';
-            }
-        }
-
-        // ============================================================
-        //  АВТОРИЗАЦИЯ
-        // ============================================================
-        async function handleAuth(event) {
-            event.preventDefault();
-
-            const name = document.getElementById('loginName')?.value.trim();
-            const email = document.getElementById('loginEmail')?.value.trim();
-            const company = document.getElementById('loginCompany')?.value.trim();
-            const password = document.getElementById('loginPassword')?.value.trim();
-
-            if (!email || !password) {
-                showToast('❌ Заполните email и пароль', true);
-                return;
-            }
-
-            if (password.length < 6) {
-                showToast('❌ Пароль должен быть минимум 6 символов', true);
-                return;
-            }
-
-            showToast('⏳ Подождите...');
-
-            try {
-                // Пробуем войти
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email,
-                    password
-                });
-
-                if (error) {
-                    // Если пользователь не найден — регистрируем
-                    if (error.message.includes('Invalid login credentials')) {
-                        showToast('⏳ Создаём аккаунт...');
-
-                        const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({
-                            email,
-                            password,
-                            options: {
-                                data: {
-                                    full_name: name || 'Пользователь',
-                                    company: company || 'Не указано'
-                                }
-                            }
-                        });
-
-                        if (signUpError) throw signUpError;
-                        if (!signUpData.user) throw new Error('Ошибка регистрации');
-
-                        // Если требуется подтверждение email
-                        if (signUpData.user?.identities?.length === 0) {
-                            showToast('📧 Подтвердите email, перейдя по ссылке в письме', true);
-                            return;
-                        }
-
-                        currentUser = signUpData.user;
-                        await loadProfile(currentUser.id);
-                        renderProfile();
-                        showToast('✅ Аккаунт создан! Добро пожаловать!');
-                        return;
-                    }
-                    throw error;
-                }
-
-                // Успешный вход
-                currentUser = data.user;
-                await loadProfile(currentUser.id);
-                renderProfile();
-                showToast('✅ Добро пожаловать!');
-
-            } catch (err) {
-                console.error('Auth error:', err);
-                showToast('❌ Ошибка: ' + err.message, true);
-            }
-        }
-
-        // ============================================================
-        //  ВЫХОД
-        // ============================================================
-        async function handleLogout() {
-            try {
-                showToast('⏳ Выход...');
-                await supabaseClient.auth.signOut();
-                currentUser = null;
-                currentProfile = null;
-                localStorage.removeItem(PROFILE_KEY);
-                renderProfile();
-                showToast('👋 Вы вышли из аккаунта');
-            } catch (err) {
-                showToast('❌ Ошибка: ' + err.message, true);
-            }
-        }
-
-        // ============================================================
-        //  БИНДИНГ ФОРМ
-        // ============================================================
-        function bindAuthForms() {
-            if (loginForm) {
-                loginForm.addEventListener('submit', handleAuth);
-            }
-
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', handleLogout);
-            }
-
-            if (headerLoginBtn) {
-                headerLoginBtn.addEventListener('click', () => {
-                    showSection('account');
-                });
-            }
-        }
-
-        // ============================================================
-        //  НАВИГАЦИЯ
-        // ============================================================
-        function bindNavigation() {
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', () => {
-                    const sectionId = link.getAttribute('data-section');
-                    if (sectionId) showSection(sectionId);
-                });
-            });
-        }
-
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => {
-                s.classList.toggle('active', s.id === id);
-            });
-            document.querySelectorAll('.nav-link').forEach(l => {
-                l.classList.toggle('active', l.getAttribute('data-section') === id);
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ============================================================
-        //  ТИКЕТЫ
-        // ============================================================
-        async function renderTickets() {
-            const list = document.getElementById('ticketList');
-            if (!list) return;
-
-            if (!currentProfile) {
-                list.innerHTML = '<p style="color:#5a6a7e; margin-top:1rem;">🔒 Войдите, чтобы видеть свои заявки</p>';
-                return;
-            }
-
-            const { data: tickets, error } = await supabaseClient
-                .from('tickets')
-                .select('*')
-                .eq('user_id', currentProfile.id)
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                console.error('Tickets error:', error);
-                list.innerHTML = '<p style="color:#ef4444;">❌ Ошибка загрузки</p>';
-                return;
-            }
-
-            if (!tickets?.length) {
-                list.innerHTML = '<p style="color:#5a6a7e; margin-top:1rem;">📭 У вас нет заявок</p>';
-                return;
-            }
-
-            list.innerHTML = tickets.map(ticket => `
-                <div class="ticket">
-                    <div class="head">
-                        <strong>${escapeHtml(ticket.subject)}</strong>
-                        <span class="status status-${ticket.status}">${statusLabel(ticket.status)}</span>
-                    </div>
-                    <p>${escapeHtml(ticket.message)}</p>
-                    <small>${formatDate(ticket.created_at)}</small>
-                </div>
-            `).join('');
-        }
-
-        async function bindTicketForm() {
-            const form = document.getElementById('ticketForm');
-            if (!form) return;
-
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                if (!currentProfile) {
-                    showToast('❌ Войдите в аккаунт, чтобы создать заявку', true);
-                    return;
-                }
-
-                const subject = document.getElementById('ticketService')?.value || 'Общее';
-                const message = document.getElementById('ticketText')?.value.trim();
-
-                if (!message) {
-                    showToast('❌ Опишите проблему', true);
-                    return;
-                }
-
-                showToast('⏳ Отправка...');
-
-                try {
-                    const { error } = await supabaseClient
-                        .from('tickets')
-                        .insert([{
-                            user_id: currentProfile.id,
-                            subject: subject,
-                            message: message,
-                            status: 'new'
-                        }]);
-
-                    if (error) throw error;
-
-                    form.reset();
-                    await renderTickets();
-                    showToast('✅ Заявка отправлена!');
-                } catch (err) {
-                    showToast('❌ Ошибка: ' + err.message, true);
-                }
-            });
-        }
-
-        // ============================================================
-        //  ВЫБОР ТАРИФА
-        // ============================================================
-        function selectTariff(tariff) {
-            if (!currentProfile) {
-                showToast('❌ Войдите в аккаунт, чтобы выбрать тариф', true);
-                return;
-            }
-
-            // Обновляем тариф в профиле
-            supabaseClient
-                .from('profiles')
-                .update({ tariff: tariff })
-                .eq('id', currentProfile.id)
-                .then(({ error }) => {
-                    if (error) {
-                        showToast('❌ Ошибка: ' + error.message, true);
-                        return;
-                    }
-                    currentProfile.tariff = tariff;
-                    localStorage.setItem(PROFILE_KEY, JSON.stringify(currentProfile));
-                    renderProfile();
-                    showToast(`✅ Тариф "${tariff}" активирован!`);
-                });
-        }
-
-        // ============================================================
-        //  УТИЛИТЫ
-        // ============================================================
-        function statusLabel(status) {
-            const map = { new: 'Новый', work: 'В работе', done: 'Решён' };
-            return map[status] || status;
-        }
-
-        function formatDate(value) {
-            if (!value) return '';
-            const d = new Date(value);
-            return d.toLocaleString('ru-RU', {
-                day: '2-digit',
-                month: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replaceAll('&', '&amp;')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;')
-                .replaceAll('"', '&quot;')
-                .replaceAll("'", '&#039;');
-        }
-
-        function showToast(message, isError = false) {
-            const old = document.querySelector('.toast');
-            if (old) old.remove();
-
-            const toast = document.createElement('div');
-            toast.className = 'toast' + (isError ? ' error' : '');
-            toast.textContent = message;
-            document.body.appendChild(toast);
-
-            setTimeout(() => toast.remove(), 3500);
-        }
-
-        // ============================================================
-        //  ГЛОБАЛЬНЫЕ ФУНКЦИИ
-        // ============================================================
-        window.showSection = showSection;
-        window.selectTariff = selectTariff;
-        window.renderTickets = renderTickets;
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
