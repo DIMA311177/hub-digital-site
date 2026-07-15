@@ -3,249 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIELD VPN — Быстрый и безопасный доступ</title>
+    <title>Hub-Digital VPN — Безопасный и быстрый интернет</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
 
-    <header class="site-header">
-        <a href="#" class="brand" data-section="home">
-            <div class="brand-mark">SH</div>
-            <div>
-                <strong>SHIELD VPN</strong>
-                <small>Твоя безопасность</small>
-            </div>
-        </a>
-        <nav class="nav" id="main-nav">
-            <button class="nav-link active" data-section="home">Главная</button>
-            <button class="nav-link" data-section="tariffs">Тарифы</button>
-            <button class="nav-link" data-section="knowledge">База знаний</button>
-            <button class="nav-link" data-section="support">Поддержка</button>
-            <button class="nav-link" data-section="account">Личный кабинет</button>
-        </nav>
-        <div class="header-actions">
-            <button class="btn ghost" data-section="account">Войти</button>
-            <button class="btn primary" data-section="tariffs">Подключить</button>
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="#" class="logo" data-section="home">
+                <span class="logo-icon">🛡️</span> Hub-Digital <span class="accent-text">VPN</span>
+            </a>
+            
+            <button class="menu-toggle" onclick="toggleNav()" aria-label="Открыть меню">☰</button>
+            
+            <nav id="main-nav" class="nav-menu">
+                <a href="#" class="nav-link active" data-section="home">Главная</a>
+                <a href="#" class="nav-link" data-section="tariffs">Тарифы</a>
+                <a href="#" class="nav-link" data-section="support">Техподдержка</a>
+                <a href="#" class="nav-link" data-section="account">Личный кабинет</a>
+            </nav>
         </div>
-        <button class="nav-toggle" onclick="toggleNav()">☰</button>
     </header>
 
-    <main class="section active" id="home">
-        <section class="hero-section active">
-            <div class="hero-bg"></div>
-            <div class="hero-content">
-                <p class="overline">Премиум VPN-сервис</p>
-                <h1>Свобода и безопасность без компромиссов</h1>
-                <p class="lede">Высокоскоростное шифрование военного уровня, отсутствие логов и мгновенный доступ к любимым ресурсам из любой точки мира.</p>
-                <div class="cta-row">
+    <main class="container content-area">
+
+        <section id="home" class="section active">
+            <div class="hero">
+                <span class="badge">Высокая скорость · Безлимит</span>
+                <h1>Защити свой интернет в один клик</h1>
+                <p class="hero-desc">Надежный шифрованный туннель для обхода блокировок, защиты личных данных и безопасного серфинга из любой точки мира.</p>
+                <div class="hero-actions">
                     <button class="btn primary" data-section="tariffs">Выбрать тариф</button>
-                    <button class="btn ghost" data-section="knowledge">Как это работает?</button>
+                    <button class="btn secondary" data-section="account">Попробовать бесплатно</button>
                 </div>
             </div>
-            <div class="hero-metrics">
-                <div>
-                    <span id="metric-ping">12 мс</span>
-                    <small>Средний пинг</small>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Максимальная скорость</h3>
+                    <p>Гигабитные порты и отсутствие ограничений по трафику для комфортного просмотра 4K-видео.</p>
                 </div>
-                <div>
-                    <span id="metric-servers">150+</span>
-                    <small>Быстрых серверов</small>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Полная анонимность</h3>
+                    <p>Мы используем современные протоколы WireGuard / VLESS и не ведем логов твоей активности.</p>
                 </div>
-                <div>
-                    <span id="metric-uptime">99.9%</span>
-                    <small>Uptime сети</small>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Для всех устройств</h3>
+                    <p>Подключай телефон, планшет, компьютер или роутер. Простая настройка за пару минут.</p>
+                </div>
+            </div>
+
+            <div class="knowledge-base">
+                <h2>Часто задаваемые вопросы (FAQ)</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <h3>Как подключить VPN после оплаты? <span>+</span></h3>
+                        <div class="faq-answer">
+                            <p>После активации тарифа в личном кабинете вы получите специальный ключ или QR-код. Скачайте официальное приложение WireGuard/Amnezia, импортируйте ключ, и всё заработает!</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Будет ли падать скорость интернета? <span>+</span></h3>
+                        <div class="faq-answer">
+                            <p>Наши сервера расположены в современных дата-центрах Европы с широким интернет-каналом. Потери скорости минимальны и практически незаметны при обычном использовании.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Сколько устройств можно подключить? <span>+</span></h3>
+                        <div class="faq-answer">
+                            <p>На бесплатном демо-тарифе доступно 1 устройство. На платном тарифе «Стандарт» или «Премиум» вы можете одновременно подключить до 5 устройств.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <section id="tariffs" class="section">
+            <div class="section-header">
+                <h2>Наши тарифные планы</h2>
+                <p>Выберите подходящий период подписки. Начать тест можно абсолютно бесплатно.</p>
+            </div>
+
+            <div class="cases-grid">
+                <article class="case-card">
+                    <div class="case-header">
+                        <span class="badge">Попробовать</span>
+                        <h3>Демо-доступ</h3>
+                    </div>
+                    <p class="price-tag">0₽ <small>/ 3 дня</small></p>
+                    <p>Бесплатный тестовый период на 3 дня. Отличный способ проверить скорость работы и пинг до серверов.</p>
+                    <button class="btn secondary full-width" onclick="showCase('clinic')">Подробнее</button>
+                </article>
+
+                <article class="case-card highlighted">
+                    <div class="case-header">
+                        <span class="badge">Популярно</span>
+                        <h3>Стандарт VPN</h3>
+                    </div>
+                    <p class="price-tag">150₽ <small>/ 30 дней</small></p>
+                    <p>Подписка на месяц. До 5 устройств одновременно, автовыбор самых быстрых серверов, безлимитный трафик.</p>
+                    <button class="btn primary full-width" onclick="showCase('agency')">Подробнее</button>
+                </article>
+
+                <article class="case-card">
+                    <div class="case-header">
+                        <span class="badge">Выгодно</span>
+                        <h3>Премиум VPN</h3>
+                    </div>
+                    <p class="price-tag">350₽ <small>/ 90 дней</small></p>
+                    <p>Подписка на 3 месяца. Максимальная скорость, выделенные IP-адреса, приоритетная поддержка 24/7.</p>
+                    <button class="btn secondary full-width" onclick="showCase('shop')">Подробнее</button>
+                </article>
+            </div>
+        </section>
+
+        <section id="support" class="section">
+            <div class="section-header">
+                <h2>Служба техподдержки</h2>
+                <p>Возникли проблемы с настройкой или оплатой? Оставьте обращение, и мы оперативно во всём разберемся.</p>
+            </div>
+
+            <div class="support-container">
+                <form id="ticketForm" class="ticket-form">
+                    <h3>Новое обращение</h3>
+                    
+                    <div class="form-group">
+                        <label for="ticketName">Ваше имя:</label>
+                        <input type="text" id="ticketName" placeholder="Дмитрий" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticketContact">Контакт для связи (Telegram / Email):</label>
+                        <input type="text" id="ticketContact" placeholder="@nickname или mail@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticketService">Тема обращения:</label>
+                        <select id="ticketService">
+                            <option value="Общие вопросы">Общие вопросы</option>
+                            <option value="Проблема с подключением">Проблема с подключением</option>
+                            <option value="Вопрос по оплате">Вопрос по оплате</option>
+                            <option value="Технический сбой">Технический сбой</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticketText">Суть проблемы / Вопрос:</label>
+                        <textarea id="ticketText" rows="5" placeholder="Опишите вашу проблему как можно подробнее..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn primary">Отправить тикет</button>
+                </form>
+
+                <div class="tickets-box">
+                    <div class="tickets-header">
+                        <h3>Ваши тикеты (<span id="ticketCount">0</span>)</h3>
+                        <button class="btn text-btn" onclick="clearClosedTickets()">Очистить решённые</button>
+                    </div>
+                    <div id="ticketList" class="ticket-list">
+                        <p class="ticket">Загрузка обращений...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="account" class="section">
+            <div class="section-header">
+                <h2>Личный кабинет клиента</h2>
+                <p>Управляйте подпиской, проверяйте баланс и активируйте подарочные промокоды.</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <h3>Вход / Регистрация</h3>
+                <p class="form-subtitle">Если аккаунта нет, система автоматически создаст его при первом входе.</p>
+                
+                <div class="form-group">
+                    <label for="loginName">Имя (для новых пользователей):</label>
+                    <input type="text" id="loginName" placeholder="Дима" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginEmail">Email (будет логином):</label>
+                    <input type="email" id="loginEmail" placeholder="dmitriy@mail.ru" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Пароль (минимум 6 символов):</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn primary">Продолжить</button>
+            </form>
+
+            <div id="profilePanel" class="profile-panel" style="display: none;">
+                <div class="profile-header">
+                    <div id="profileAvatar" class="profile-avatar">VP</div>
+                    <div>
+                        <h3 id="profileName">Загрузка...</h3>
+                        <p id="profileEmail">email@example.com</p>
+                    </div>
+                    <button id="logoutBtn" class="btn ghost danger-btn">Выйти</button>
+                </div>
+
+                <div class="profile-details-grid">
+                    <div class="details-card">
+                        <h4>Информация о подписке</h4>
+                        <p id="profileCompany">Загрузка данных о тарифе...</p>
+                    </div>
+
+                    <div class="details-card">
+                        <form id="profileForm">
+                            <label for="aboutText" style="font-weight: bold; display: block; margin-bottom: 8px;">Активировать промокод:</label>
+                            <input type="text" id="aboutText" class="promo-input" placeholder="Например, SHIELD500" required>
+                            <button type="submit" class="btn primary full-width" style="margin-top: 10px;">Применить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <section class="section" id="tariffs">
-        <div class="section-head">
-            <div>
-                <p class="overline">Наши планы</p>
-                <h2>Выберите подходящий тариф</h2>
-            </div>
-            <span class="chip">Скидки до 50%</span>
-        </div>
-        <div class="case-grid">
-            <article class="case-card" onclick="showTariff('monthly')">
-                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80" alt="Старт">
-                <div>
-                    <span class="badge">Популярно</span>
-                    <h3>1 Месяц</h3>
-                    <p>Базовый доступ ко всем локациям, скорость до 100 Мбит/с.</p>
-                    <strong style="font-size: 1.4rem; display: block; margin-top: 10px;">190 ₽ / мес</strong>
-                </div>
-            </article>
-
-            <article class="case-card" onclick="showTariff('halfyear')">
-                <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=600&q=80" alt="Оптимум">
-                <div>
-                    <span class="badge">Выгодно</span>
-                    <h3>6 Месяцев</h3>
-                    <p>Приоритетный канал, скорость до 300 Мбит/с, 3 устройства.</p>
-                    <strong style="font-size: 1.4rem; display: block; margin-top: 10px;">890 ₽ (148 ₽/мес)</strong>
-                </div>
-            </article>
-
-            <article class="case-card" onclick="showTariff('yearly')">
-                <img src="https://images.unsplash.com/photo-1633265486064-086b219458ec?auto=format&fit=crop&w=600&q=80" alt="Ультра">
-                <div>
-                    <span class="badge">Максимальный сейв</span>
-                    <h3>1 Год</h3>
-                    <p>Максимальная скорость до 1 Гбит/с, 5 устройств + Выделенный IP.</p>
-                    <strong style="font-size: 1.4rem; display: block; margin-top: 10px;">1490 ₽ (124 ₽/мес)</strong>
-                </div>
-            </article>
-        </div>
-    </section>
-
-    <section class="section" id="knowledge">
-        <div class="section-head">
-            <div>
-                <p class="overline">Полезная информация</p>
-                <h2>Частые вопросы и инструкции</h2>
-            </div>
-        </div>
-        <div class="knowledge-layout">
-            <div class="article-list">
-                <button onclick="showArticle('setup')">📄 Как настроить VPN на телефоне и ПК?</button>
-                <button onclick="showArticle('servers')">📄 Список доступных стран и серверов</button>
-                <button onclick="showArticle('speed')">📄 Влияет ли VPN на скорость интернета?</button>
-            </div>
-            <div class="faq-list">
-                <div class="faq-item">
-                    <h3>Безопасно ли использовать ваш VPN?</h3>
-                    <div class="faq-content">
-                        <p>Да, абсолютно. Мы используем современный протокол шифрования WireGuard/OpenVPN и придерживаемся строгой политики отсутствия логов (No-Logs Policy) — мы не сохраняем историю ваших действий в сети.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <h3>Как происходит оплата?</h3>
-                    <div class="faq-content">
-                        <p>Оплатить подписку можно любыми банковскими картами, СБП или криптовалютой в личном кабинете после регистрации.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="support">
-        <div class="section-head">
-            <div>
-                <p class="overline">Помощь</p>
-                <h2>Служба техподдержки</h2>
-            </div>
-        </div>
-        <div class="support-layout">
-            <form class="work-form" id="ticketForm">
-                <label>
-                    Ваше имя
-                    <input type="text" id="ticketName" required placeholder="Иван">
-                </label>
-                <label>
-                    Telegram или Email
-                    <input type="text" id="ticketContact" required placeholder="@username или email@example.com">
-                </label>
-                <label>
-                    Категория проблемы
-                    <select id="ticketService">
-                        <option value="Проблема с подключением">Не удается подключиться</option>
-                        <option value="Вопрос по оплате">Проблема с оплатой</option>
-                        <option value="Скорость интернета">Низкая скорость</option>
-                        <option value="Другое">Другой вопрос</option>
-                    </select>
-                </label>
-                <label>
-                    Описание проблемы
-                    <textarea id="ticketText" required placeholder="Опишите вашу проблему как можно подробнее..."></textarea>
-                </label>
-                <button type="submit" class="btn primary">Отправить тикет</button>
-            </form>
-            <div class="ticket-panel">
-                <div class="panel-title">
-                    <h3>Ваши активные обращения</h3>
-                    <button class="btn ghost btn-compact" onclick="clearClosedTickets()">Очистить закрытые</button>
-                </div>
-                <div class="ticket-list" id="ticketList">
-                    </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="account">
-        <div class="section-head">
-            <div>
-                <p class="overline">Кабинет клиента</p>
-                <h2>Управление подпиской</h2>
-            </div>
-        </div>
-        <div class="account-layout">
-            <form class="work-form" id="loginForm">
-                <h3>Вход в систему</h3>
-                <label>
-                    Ваш никнейм или имя
-                    <input type="text" id="loginName" required placeholder="Dmitry">
-                </label>
-                <label>
-                    Ваш Email
-                    <input type="email" id="loginEmail" required placeholder="user@example.com">
-                </label>
-                <button type="submit" class="btn primary">Создать аккаунт / Войти</button>
-            </form>
-
-            <div class="profile-panel" id="profilePanel" style="display: none;">
-                <div class="profile-top">
-                    <div class="avatar-large" id="profileAvatar">UN</div>
-                    <div>
-                        <h3 id="profileName">Пользователь</h3>
-                        <p id="profileEmail">user@example.com</p>
-                    </div>
-                    <button class="btn ghost btn-compact" id="logoutBtn">Выйти</button>
-                </div>
-                
-                <div class="project-strip">
-                    <div>
-                        <span>Ваш тариф</span>
-                        <strong id="profileTariff">Не активен</strong>
-                    </div>
-                    <div>
-                        <span>Действует до</span>
-                        <strong id="profileExpires">—</strong>
-                    </div>
-                    <div>
-                        <span>Баланс</span>
-                        <strong id="profileBalance">0₽</strong>
-                    </div>
-                </div>
-
-                <div style="margin-top: 24px; display: grid; gap: 12px;">
-                    <h3>Файлы конфигурации</h3>
-                    <p>Импортируйте этот файл в приложение WireGuard или OpenVPN на вашем устройстве для автоматического подключения.</p>
-                    <button class="btn primary" onclick="downloadConfig()" style="width: max-content;">📥 Скачать файл .ovpn (OpenVPN)</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="site-footer">
-        <div>
-            <strong>SHIELD VPN © 2026</strong>
-            <p>Ваша надежная защита в глобальной сети.</p>
-        </div>
-        <div>
-            <p>Разработано для свободы интернета</p>
-            <p>Поддержка: support@shieldvpn.ru</p>
-        </div>
-    </footer>
-
-    <div class="modal" id="modal" style="display: none;">
+    <div id="modal" class="modal-overlay" onclick="if(event.target === this) closeModal();">
         <div class="modal-content">
-            <button class="close" onclick="closeModal()">×</button>
-            <div id="modal-body"></div>
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div id="modal-body">
+                </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <footer class="main-footer">
+        <div class="container footer-container">
+            <p>&copy; 2026 Hub-Digital VPN. Все права защищены.</p>
+            <p>Создано для безопасного и свободного интернета 🛡️</p>
+        </div>
+    </footer>
+
 </body>
 </html>
