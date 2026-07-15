@@ -3,214 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель управления ИП — Hub Digital</title>
+    <title>SHIELD VPN — Быстрый и безопасный доступ</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <aside class="sidebar">
-        <a class="brand" href="#home" data-section="home">
-            <span class="brand-mark">HD</span>
-            <div class="brand-text">
-                <strong>Hub Digital</strong>
-                <small>ИП Цифровые Решения</small>
+    <header class="site-header">
+        <a href="#" class="brand" data-section="home">
+            <div class="brand-mark">SH</div>
+            <div>
+                <strong>SHIELD VPN</strong>
+                <small>Твоя безопасность</small>
             </div>
         </a>
-
-        <nav class="sidebar-nav" id="main-nav">
-            <button class="nav-link active" data-section="home">📊 Главная</button>
-            <button class="nav-link" data-section="services">💼 Наши услуги</button>
-            <button class="nav-link" data-section="cases">📂 Портфолио</button>
-            <button class="nav-link" data-section="support">📩 Заявки и CRM</button>
-            <button class="nav-link" data-section="knowledge">🧠 База знаний</button>
-            <button class="nav-link" data-section="account">⚙️ Профиль ИП</button>
+        <nav class="nav" id="main-nav">
+            <button class="nav-link active" data-section="home">Главная</button>
+            <button class="nav-link" data-section="tariffs">Тарифы</button>
+            <button class="nav-link" data-section="knowledge">База знаний</button>
+            <button class="nav-link" data-section="support">Поддержка</button>
+            <button class="nav-link" data-section="account">Личный кабинет</button>
         </nav>
-
-        <div class="sidebar-footer">
-            <button class="btn ghost btn-compact" data-section="account">Управление</button>
+        <div class="header-actions">
+            <button class="btn ghost" data-section="account">Войти</button>
+            <button class="btn primary" data-section="tariffs">Подключить</button>
         </div>
-    </aside>
+        <button class="nav-toggle" onclick="toggleNav()">☰</button>
+    </header>
 
-    <div class="main-layout">
-        <header class="mobile-header">
-            <span class="brand-mark">HD</span>
-            <strong>Hub Digital</strong>
-            <button class="nav-toggle" onclick="toggleNav()">☰</button>
-        </header>
+    <main class="section active" id="home">
+        <section class="hero-section active">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <p class="overline">Премиум VPN-сервис</p>
+                <h1>Свобода и безопасность без компромиссов</h1>
+                <p class="lede">Высокоскоростное шифрование военного уровня, отсутствие логов и мгновенный доступ к любимым ресурсам из любой точки мира.</p>
+                <div class="cta-row">
+                    <button class="btn primary" data-section="tariffs">Выбрать тариф</button>
+                    <button class="btn ghost" data-section="knowledge">Как это работает?</button>
+                </div>
+            </div>
+            <div class="hero-metrics">
+                <div>
+                    <span id="metric-ping">12 мс</span>
+                    <small>Средний пинг</small>
+                </div>
+                <div>
+                    <span id="metric-servers">150+</span>
+                    <small>Быстрых серверов</small>
+                </div>
+                <div>
+                    <span id="metric-uptime">99.9%</span>
+                    <small>Uptime сети</small>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        <main class="content-area">
-            
-            <section id="home" class="section active">
-                <div class="hero-card">
-                    <p class="overline">Автоматизация и разработка</p>
-                    <h1>Платформа управления заказами для вашего бизнеса</h1>
-                    <p class="lede">Развертывание IT-инфраструктуры под ключ: от продающих сайтов до интеграции внутренних CRM и умных Telegram-ботов.</p>
-                    <div class="cta-row">
-                        <button class="btn primary" data-section="support">Создать новый тикет</button>
-                        <button class="btn ghost" data-section="services">Посмотреть прайс</button>
+    <section class="section" id="tariffs">
+        <div class="section-head">
+            <div>
+                <p class="overline">Наши планы</p>
+                <h2>Выберите подходящий тариф</h2>
+            </div>
+            <span class="chip">Скидки до 50%</span>
+        </div>
+        <div class="case-grid">
+            <article class="case-card" onclick="showTariff('monthly')">
+                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80" alt="Старт">
+                <div>
+                    <span class="badge">Популярно</span>
+                    <h3>1 Месяц</h3>
+                    <p>Базовый доступ ко всем локациям, скорость до 100 Мбит/с.</p>
+                    <strong style="font-size: 1.4rem; display: block; margin-top: 10px;">190 ₽ / мес</strong>
+                </div>
+            </article>
+
+            <article class="case-card" onclick="showTariff('halfyear')">
+                <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=600&q=80" alt="Оптимум">
+                <div>
+                    <span class="badge">Выгодно</span>
+                    <h3>6 Месяцев</h3>
+                    <p>Приоритетный канал, скорость до 300 Мбит/с, 3 устройства.</p>
+                    <strong style="font-size: 1.4rem; display: block; margin-top: 10px;">890 ₽ (148 ₽/мес)</strong>
+                </div>
+            </article>
+
+            <article class="case-card" onclick="showTariff('yearly')">
+                <img src="https://images.unsplash.com/photo-1633265486064-086b219458ec?auto=format&fit=crop&w=600&q=80" alt="Ультра">
+                <div>
+                    <span class="badge">Максимальный сейв</span>
+                    <h3>1 Год</h3>
+                    <p>Максимальная скорость до 1 Гбит/с, 5 устройств + Выделенный IP.</p>
+                    <strong style="font-size: 1.4rem; display: block; margin-top: 10px;">1490 ₽ (124 ₽/мес)</strong>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="section" id="knowledge">
+        <div class="section-head">
+            <div>
+                <p class="overline">Полезная информация</p>
+                <h2>Частые вопросы и инструкции</h2>
+            </div>
+        </div>
+        <div class="knowledge-layout">
+            <div class="article-list">
+                <button onclick="showArticle('setup')">📄 Как настроить VPN на телефоне и ПК?</button>
+                <button onclick="showArticle('servers')">📄 Список доступных стран и серверов</button>
+                <button onclick="showArticle('speed')">📄 Влияет ли VPN на скорость интернета?</button>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h3>Безопасно ли использовать ваш VPN?</h3>
+                    <div class="faq-content">
+                        <p>Да, абсолютно. Мы используем современный протокол шифрования WireGuard/OpenVPN и придерживаемся строгой политики отсутствия логов (No-Logs Policy) — мы не сохраняем историю ваших действий в сети.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <h3>Как происходит оплата?</h3>
+                    <div class="faq-content">
+                        <p>Оплатить подписку можно любыми банковскими картами, СБП или криптовалютой в личном кабинете после регистрации.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="support">
+        <div class="section-head">
+            <div>
+                <p class="overline">Помощь</p>
+                <h2>Служба техподдержки</h2>
+            </div>
+        </div>
+        <div class="support-layout">
+            <form class="work-form" id="ticketForm">
+                <label>
+                    Ваше имя
+                    <input type="text" id="ticketName" required placeholder="Иван">
+                </label>
+                <label>
+                    Telegram или Email
+                    <input type="text" id="ticketContact" required placeholder="@username или email@example.com">
+                </label>
+                <label>
+                    Категория проблемы
+                    <select id="ticketService">
+                        <option value="Проблема с подключением">Не удается подключиться</option>
+                        <option value="Вопрос по оплате">Проблема с оплатой</option>
+                        <option value="Скорость интернета">Низкая скорость</option>
+                        <option value="Другое">Другой вопрос</option>
+                    </select>
+                </label>
+                <label>
+                    Описание проблемы
+                    <textarea id="ticketText" required placeholder="Опишите вашу проблему как можно подробнее..."></textarea>
+                </label>
+                <button type="submit" class="btn primary">Отправить тикет</button>
+            </form>
+            <div class="ticket-panel">
+                <div class="panel-title">
+                    <h3>Ваши активные обращения</h3>
+                    <button class="btn ghost btn-compact" onclick="clearClosedTickets()">Очистить закрытые</button>
+                </div>
+                <div class="ticket-list" id="ticketList">
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="account">
+        <div class="section-head">
+            <div>
+                <p class="overline">Кабинет клиента</p>
+                <h2>Управление подпиской</h2>
+            </div>
+        </div>
+        <div class="account-layout">
+            <form class="work-form" id="loginForm">
+                <h3>Вход в систему</h3>
+                <label>
+                    Ваш никнейм или имя
+                    <input type="text" id="loginName" required placeholder="Dmitry">
+                </label>
+                <label>
+                    Ваш Email
+                    <input type="email" id="loginEmail" required placeholder="user@example.com">
+                </label>
+                <button type="submit" class="btn primary">Создать аккаунт / Войти</button>
+            </form>
+
+            <div class="profile-panel" id="profilePanel" style="display: none;">
+                <div class="profile-top">
+                    <div class="avatar-large" id="profileAvatar">UN</div>
+                    <div>
+                        <h3 id="profileName">Пользователь</h3>
+                        <p id="profileEmail">user@example.com</p>
+                    </div>
+                    <button class="btn ghost btn-compact" id="logoutBtn">Выйти</button>
+                </div>
+                
+                <div class="project-strip">
+                    <div>
+                        <span>Ваш тариф</span>
+                        <strong id="profileTariff">Не активен</strong>
+                    </div>
+                    <div>
+                        <span>Действует до</span>
+                        <strong id="profileExpires">—</strong>
+                    </div>
+                    <div>
+                        <span>Баланс</span>
+                        <strong id="profileBalance">0₽</strong>
                     </div>
                 </div>
 
-                <div class="metrics-grid">
-                    <div class="metric-box">
-                        <span id="stat-total">0</span>
-                        <small>Всего заказов в БД</small>
-                    </div>
-                    <div class="metric-box">
-                        <span id="stat-active">0</span>
-                        <small>В обработке</small>
-                    </div>
-                    <div class="metric-box">
-                        <span>100%</span>
-                        <small>Сохранность данных (IndexedDB)</small>
-                    </div>
+                <div style="margin-top: 24px; display: grid; gap: 12px;">
+                    <h3>Файлы конфигурации</h3>
+                    <p>Импортируйте этот файл в приложение WireGuard или OpenVPN на вашем устройстве для автоматического подключения.</p>
+                    <button class="btn primary" onclick="downloadConfig()" style="width: max-content;">📥 Скачать файл .ovpn (OpenVPN)</button>
                 </div>
-            </section>
+            </div>
+        </div>
+    </section>
 
-            <section id="services" class="section">
-                <div class="section-head">
-                    <h2>Пакетные услуги для бизнеса</h2>
-                </div>
-                <div class="service-grid">
-                    <div class="service-card">
-                        <span class="service-code">TG</span>
-                        <h3>Разработка Telegram-ботов</h3>
-                        <p>Автоматический прием платежей, воронки продаж, запись клиентов на услуги ИП и рассылки прямо в мессенджер.</p>
-                        <button class="link-button" onclick="prefillTicket('Разработка Telegram-ботов')">Выбрать услугу →</button>
-                    </div>
-                    <div class="service-card">
-                        <span class="service-code">CRM</span>
-                        <h3>Внедрение CRM и баз данных</h3>
-                        <p>Разработка дашбордов для контроля менеджеров, автоматизация отчетности, сбор заявок без потери лидов.</p>
-                        <button class="link-button" onclick="prefillTicket('Внедрение CRM и баз данных')">Выбрать услугу →</button>
-                    </div>
-                    <div class="service-card">
-                        <span class="service-code">API</span>
-                        <h3>Интеграция сервисов и ТГ</h3>
-                        <p>Свяжем ваш сайт, Telegram, складской учет (МойСклад) и эквайринг (оплаты) в единую рабочую экосистему.</p>
-                        <button class="link-button" onclick="prefillTicket('Интеграция сервисов')">Выбрать услугу →</button>
-                    </div>
-                </div>
-            </section>
+    <footer class="site-footer">
+        <div>
+            <strong>SHIELD VPN © 2026</strong>
+            <p>Ваша надежная защита в глобальной сети.</p>
+        </div>
+        <div>
+            <p>Разработано для свободы интернета</p>
+            <p>Поддержка: support@shieldvpn.ru</p>
+        </div>
+    </footer>
 
-            <section id="cases" class="section">
-                <div class="section-head">
-                    <h2>Успешные интеграции</h2>
-                </div>
-                <div class="case-grid">
-                    <div class="case-card" onclick="showCase('clinic')">
-                        <div class="case-img-placeholder">🏥</div>
-                        <div>
-                            <span class="chip">Автоматизация</span>
-                            <h3>Запись для медцентров в ТГ</h3>
-                            <p>Клиенты записываются через бота, данные летят напрямую в CRM систему.</p>
-                        </div>
-                    </div>
-                    <div class="case-card" onclick="showCase('agency')">
-                        <div class="case-img-placeholder">🚀</div>
-                        <div>
-                            <span class="chip">Кабинеты</span>
-                            <h3>B2B Кабинет дистрибьютора</h3>
-                            <p>Управление оптовыми отгрузками, актами сверки и счетами для контрагентов.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="support" class="section">
-                <div class="section-head">
-                    <h2>Управление заказами (Локальная CRM)</h2>
-                </div>
-                <div class="support-layout">
-                    <form id="ticketForm" class="work-form">
-                        <h3>Регистрация новой сделки</h3>
-                        <label>
-                            Имя клиента / Контрагент
-                            <input type="text" id="ticketName" required placeholder="ООО Вектор">
-                        </label>
-                        <label>
-                            Контакты (Телеграм / Телефон)
-                            <input type="text" id="ticketContact" required placeholder="@manager_opt">
-                        </label>
-                        <label>
-                            Направление проекта
-                            <select id="ticketService">
-                                <option value="Разработка Telegram-ботов">Разработка Telegram-ботов</option>
-                                <option value="Внедрение CRM и баз данных">Внедрение CRM и баз данных</option>
-                                <option value="Интеграция сервисов">Интеграция сервисов</option>
-                            </select>
-                        </label>
-                        <label>
-                            Техническое задание / Комментарий
-                            <textarea id="ticketText" required placeholder="Опишите требования к интеграции или боту..."></textarea>
-                        </label>
-                        <button class="btn primary" type="submit">Сохранить в базу данных</button>
-                    </form>
-
-                    <div class="ticket-panel">
-                        <div class="panel-title">
-                            <h3>Заказы в IndexedDB</h3>
-                            <button class="btn ghost btn-compact" onclick="clearClosedTickets()">Удалить закрытые</button>
-                        </div>
-                        <div id="ticketList" class="ticket-list"></div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="knowledge" class="section">
-                <div class="section-head">
-                    <h2>Инструкции и регламенты ИП</h2>
-                </div>
-                <div class="knowledge-layout">
-                    <div class="article-list">
-                        <button onclick="showArticle('brief')">📋 Шаблон ТЗ на разработку бота</button>
-                        <button onclick="showArticle('domain')">🌐 Как подключить WebApp в Telegram</button>
-                        <button onclick="showArticle('db')">💾 Как устроена база IndexedDB в браузере</button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="account" class="section">
-                <div class="section-head">
-                    <h2>Профиль организации (ИП)</h2>
-                </div>
-                <div class="account-layout">
-                    <form id="profileForm" class="work-form">
-                        <h3>Реквизиты и настройки</h3>
-                        <label>
-                            Название организации
-                            <input type="text" id="profCompany" placeholder="ИП Иванов А.А.">
-                        </label>
-                        <label>
-                            ИНН
-                            <input type="text" id="profInn" placeholder="770000000000">
-                        </label>
-                        <label>
-                            Контактный Email для уведомлений
-                            <input type="email" id="profEmail" placeholder="info@it-hub.ru">
-                        </label>
-                        <label>
-                            Рабочие заметки (токены API, ключи ТГ-бота)
-                            <textarea id="profAbout" placeholder="Сюда можно временно сохранить BOT_TOKEN..."></textarea>
-                        </label>
-                        <button class="btn secondary" type="submit">Сохранить профиль</button>
-                    </form>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <div id="modal" class="modal" style="display:none;">
+    <div class="modal" id="modal" style="display: none;">
         <div class="modal-content">
             <button class="close" onclick="closeModal()">×</button>
             <div id="modal-body"></div>
         </div>
-    </div>
-
-    <div class="mobile-actions">
-        <button class="btn primary" data-section="support">📊 CRM</button>
-        <button class="btn secondary" data-section="services">💼 Услуги</button>
-        <button class="btn ghost" data-section="account">⚙️ ИП</button>
     </div>
 
     <script src="script.js"></script>
