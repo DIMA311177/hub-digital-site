@@ -2,8 +2,8 @@
 const SUPABASE_URL = 'https://iwcbyzpyayaryxtgugjr.supabase.co'; 
 const SUPABASE_ANON_KEY = 'sb_publishable_7YFjuzQ518cbbY0dg34p4A_8ZTcUTvj';
 
-// Инициализируем клиент Supabase
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Используем supabaseClient для избежания конфликта с глобальным объектом библиотеки
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // ============================================================
 
 const PROFILE_KEY = 'hubdigital_profile_v1';
@@ -50,9 +50,8 @@ function toggleNav() {
     }
 }
 
-// НАВИГАЦИЯ МЕЖДУ СЕКЦИЯМИ (КЛИКИ ПО МЕНЮ И КНОПКАМ)
+// НАВИГАЦИЯ МЕЖДУ СЕКЦИЯМИ
 function bindNavigation() {
-    // Вешаем обработчик клика на любой элемент с атрибутом data-section
     document.body.addEventListener('click', event => {
         const targetEl = event.target.closest('[data-section]');
         if (targetEl) {
@@ -66,23 +65,19 @@ function bindNavigation() {
 }
 
 function showSection(id) {
-    // Скрываем все секции и показываем только нужную
     document.querySelectorAll('.section').forEach(section => {
         section.classList.toggle('active', section.id === id);
     });
 
-    // Обновляем активный класс для ссылок в шапке сайта
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.toggle('active', link.getAttribute('data-section') === id);
     });
 
-    // Скрываем мобильное меню после выбора раздела
     const nav = document.getElementById('main-nav');
     if (nav) {
         nav.classList.remove('active');
     }
 
-    // Плавно скроллим страницу вверх
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -110,7 +105,7 @@ function bindTicketForm() {
 
         showToast('Отправка обращения...');
 
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('vpn_tickets')
             .insert([
                 { name, contact, service, text, status: 'new' }
@@ -131,7 +126,7 @@ async function renderTickets() {
     const list = document.getElementById('ticketList');
     if (!list) return;
 
-    const { data: tickets, error } = await supabase
+    const { data: tickets, error } = await supabaseClient
         .from('vpn_tickets')
         .select('*')
         .order('id', { ascending: false });
@@ -178,7 +173,7 @@ function statusLabel(status) {
 async function setTicketStatus(id, status) {
     showToast('Обновление статуса...');
     
-    const { error } = await supabase
+    const { error } = await supabaseClient
         .from('vpn_tickets')
         .update({ status })
         .eq('id', id);
@@ -194,7 +189,7 @@ async function setTicketStatus(id, status) {
 async function clearClosedTickets() {
     showToast('Очистка...');
 
-    const { error } = await supabase
+    const { error } = await supabaseClient
         .from('vpn_tickets')
         .delete()
         .eq('status', 'done');
@@ -216,13 +211,13 @@ function prefillTicket(service) {
     document.getElementById('ticketName')?.focus();
 }
 
-// ============== НАСТОЯЩАЯ АВТОРИЗАЦИЯ (SUPABASE AUTH) ==============
+// ============== АВТОРИЗАЦИЯ (SUPABASE AUTH) ==============
 
 async function checkUserSession() {
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const { data: { session }, error } = await supabaseClient.auth.getSession();
     
     if (session && session.user) {
-        let { data: userProfile } = await supabase
+        let { data: userProfile } = await supabaseClient
             .from('vpn_users')
             .select('*')
             .eq('email', session.user.email)
@@ -253,18 +248,16 @@ function bindAccount() {
 
             showToast('Вход / Регистрация...');
 
-            // 1. Пробуем войти в систему
-            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({
                 email: email,
                 password: password,
             });
 
             if (signInError) {
-                // 2. Если пользователя нет (Invalid login credentials), регистрируем его
                 if (signInError.message.includes('Invalid login credentials') || signInError.status === 400) {
                     showToast('Регистрация нового пользователя...');
                     
-                    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                    const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({
                         email: email,
                         password: password,
                         options: {
@@ -277,13 +270,11 @@ function bindAccount() {
                         return;
                     }
 
-                    // Дата окончания демо-доступа
                     const expireDate = new Date();
                     expireDate.setDate(expireDate.getDate() + 3);
                     const formattedDate = expireDate.toISOString().split('T')[0];
 
-                    // Создаем запись профиля в таблице vpn_users
-                    const { data: newUser, error: createError } = await supabase
+                    const { data: newUser, error: createError } = await supabaseClient
                         .from('vpn_users')
                         .insert([
                             { 
@@ -309,8 +300,7 @@ function bindAccount() {
                     showToast('Ошибка авторизации: ' + signInError.message);
                 }
             } else {
-                // Успешный вход
-                let { data: userProfile } = await supabase
+                let { data: userProfile } = await supabaseClient
                     .from('vpn_users')
                     .select('*')
                     .eq('email', email)
@@ -353,7 +343,7 @@ function bindAccount() {
                 return;
             }
 
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('vpn_users')
                 .update({ balance: newBalance, tariff: newTariff })
                 .eq('email', profile.email);
@@ -374,7 +364,7 @@ function bindAccount() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
             showToast('Выход...');
-            await supabase.auth.signOut();
+            await supabaseClient.auth.signOut();
             localStorage.removeItem(PROFILE_KEY);
             renderProfile();
             showToast('Вы вышли из аккаунта.');
