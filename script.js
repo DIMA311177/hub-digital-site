@@ -1,68 +1,82 @@
-// Инициализация базы данных IndexedDB
-const DB_NAME = 'HubDigitalDB';
-const DB_VERSION = 1;
-const STORE_NAME = 'tickets';
-const PROFILE_KEY = 'hubdigital_profile_v1';
-let db;
+const TICKETS_KEY = 'vpn_tickets_v1';
+const PROFILE_KEY = 'vpn_profile_v1';
 
-function initDB() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
+const seedTickets = [
+    {
+        id: 'VPN-1001',
+        name: 'Дмитрий',
+        contact: '@dmitry_dev',
+        service: 'Проблема с подключением',
+        text: 'Не подключается к серверу в Германии через мобильный интернет. На домашнем Wi-Fi всё работает супер.',
+        status: 'work',
+        createdAt: '2026-07-15T13:20:00Z'
+    }
+];
 
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => {
-            db = request.result;
-            resolve(db);
-        };
-
-        request.onupgradeneeded = (event) => {
-            const database = event.target.result;
-            if (!database.objectStoreNames.contains(STORE_NAME)) {
-                database.createObjectStore(STORE_NAME, { keyPath: 'id' });
-            }
-        };
-    });
-}
-
-const caseData = {
-    clinic: { title: 'Бот-запись для медцентров', badge: 'Автоматизация', text: 'Позволяет пациентам выбирать врача, дату и время внутри Телеграм. Администраторы видят аналитику прямо в панели.', result: 'Снижение нагрузки на колл-центр на 40%.' },
-    agency: { title: 'Кабинет Дистрибьютора', badge: 'Личные кабинеты', text: 'Оптовый портал для автоматического формирования счетов, актов и отслеживания баланса договоров контрагентов.', result: 'Исключены ошибки ручного ввода счетов в 1С.' }
+const tariffData = {
+    monthly: {
+        title: 'Тариф «Старт» (1 месяц)',
+        badge: 'Популярно',
+        text: 'Доступ ко всем локациям, скорость до 100 Мбит/с, 1 устройство. Идеально для быстрого теста.',
+        result: 'Быстрый и безопасный интернет на месяц за 190₽.'
+    },
+    halfyear: {
+        title: 'Тариф «Оптимум» (6 месяцев)',
+        badge: 'Выгодно',
+        text: 'Доступ ко всем локациям, скорость до 300 Мбит/с, до 3 устройств одновременно.',
+        result: 'Экономия 30%. Полная свобода без ограничений за 890₽.'
+    },
+    yearly: {
+        title: 'Тариф «Ультра» (1 год)',
+        badge: 'Максимальный сейв',
+        text: 'Максимальный приоритет в сети, скорость до 1 Гбит/с, до 5 устройств. Выделенный IP по запросу.',
+        result: 'Скидка 50%. Бескомпромиссная защита на целый год за 1490₽.'
+    }
 };
 
 const articleData = {
-    brief: { title: 'Шаблон ТЗ на разработку бота', text: 'Для успешного старта бота опишите: Какие команды должен обрабатывать бот? Нужна ли корзина и интеграция платежей? Куда отправлять уведомления о новых заказах (в чат группы или CRM)?' },
-    domain: { title: 'Как подключить WebApp в Telegram', text: 'WebApps позволяют открывать полноценные адаптивные сайты (как этот) прямо внутри интерфейса Telegram. Для подключения создайте бота в @BotFather, перейдите в Bot Settings -> Menu Button и укажите URL вашего сайта на GitHub Pages.' },
-    db: { title: 'Как устроена база IndexedDB в браузере', text: 'В отличие от localStorage, который хранит только строки до 5 МБ, IndexedDB — это полноценная транзакционная база данных внутри вашего браузера. Она позволяет надежно хранить структурированные объекты практически неограниченного объема.' }
+    setup: {
+        title: 'Как настроить VPN на телефоне?',
+        text: 'Скачайте приложение WireGuard или OpenVPN в App Store / Google Play. Перейдите в личный кабинет на нашем сайте, скачайте файл конфигурации (.conf / .ovpn) и просто импортируйте его в установленное приложение. Подключение произойдет автоматически.'
+    },
+    servers: {
+        title: 'Какие локации доступны?',
+        text: 'На наших премиум тарифах доступны сверхбыстрые серверы в Германии, Нидерландах, Финляндии, Турции, Казахстане, ОАЭ и США. Список пополняется каждый месяц.'
+    },
+    speed: {
+        title: 'Падает ли скорость при работе?',
+        text: 'Наши серверы подключены к гигабитным каналам. Потери скорости минимизированы с помощью современного протокола шифрования и составляют не более 5-10% от базовой скорости вашего провайдера.'
+    }
 };
 
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        await initDB();
-        await renderTickets();
-    } catch (e) {
-        console.error('Ошибка инициализации IndexedDB:', e);
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    ensureTickets();
     bindNavigation();
+    bindFaq();
     bindTicketForm();
-    bindProfileForm();
-    loadProfile();
+    bindAccount();
+    renderTickets();
+    renderProfile();
     showSection('home');
 });
 
-// Навигация
-function bindNavigation() {
-    document.querySelectorAll('[data-section]').forEach(el => {
-        el.addEventListener('click', e => {
-            e.preventDefault();
-            showSection(el.getAttribute('data-section'));
-        });
-    });
+function ensureTickets() {
+    if (!localStorage.getItem(TICKETS_KEY)) {
+        localStorage.setItem(TICKETS_KEY, JSON.stringify(seedTickets));
+    }
 }
 
-function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === id));
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.getAttribute('data-section') === id));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+function getTickets() {
+    try {
+        const tickets = JSON.parse(localStorage.getItem(TICKETS_KEY));
+        return Array.isArray(tickets) ? tickets : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveTickets(tickets) {
+    localStorage.setItem(TICKETS_KEY, JSON.stringify(tickets));
 }
 
 function toggleNav() {
@@ -70,167 +84,299 @@ function toggleNav() {
     if (nav) nav.classList.toggle('active');
 }
 
-// Работа с Базой Данных (IndexedDB операции)
-function getAllTicketsFromDB() {
-    return new Promise((resolve) => {
-        if (!db) return resolve([]);
-        const tx = db.transaction(STORE_NAME, 'readonly');
-        const store = tx.objectStore(STORE_NAME);
-        const request = store.getAll();
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => resolve([]);
+function bindNavigation() {
+    document.querySelectorAll('[data-section]').forEach(el => {
+        el.addEventListener('click', event => {
+            const target = el.getAttribute('data-section');
+            if (!target) return;
+            event.preventDefault();
+            showSection(target);
+        });
     });
 }
 
-function addTicketToDB(ticket) {
-    return new Promise((resolve) => {
-        const tx = db.transaction(STORE_NAME, 'readwrite');
-        const store = tx.objectStore(STORE_NAME);
-        store.put(ticket);
-        tx.oncomplete = () => resolve(true);
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(section => {
+        section.classList.toggle('active', section.id === id);
+    });
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-section') === id);
+    });
+
+    const nav = document.getElementById('main-nav');
+    if (nav) nav.classList.remove('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function bindFaq() {
+    document.querySelectorAll('.faq-item h3').forEach(title => {
+        title.addEventListener('click', () => {
+            title.closest('.faq-item').classList.toggle('open');
+        });
     });
 }
 
-function deleteTicketFromDB(id) {
-    return new Promise((resolve) => {
-        const tx = db.transaction(STORE_NAME, 'readwrite');
-        const store = tx.objectStore(STORE_NAME);
-        store.delete(id);
-        tx.oncomplete = () => resolve(true);
-    });
-}
-
-// CRM Функционал
 function bindTicketForm() {
     const form = document.getElementById('ticketForm');
     if (!form) return;
-    form.addEventListener('submit', async e => {
-        e.preventDefault();
+
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+
         const ticket = {
-            id: 'HD-' + Date.now().toString().slice(-5),
+            id: makeTicketId(),
             name: document.getElementById('ticketName').value.trim(),
             contact: document.getElementById('ticketContact').value.trim(),
             service: document.getElementById('ticketService').value,
             text: document.getElementById('ticketText').value.trim(),
             status: 'new',
-            date: new Date().toLocaleDateString('ru-RU')
+            createdAt: new Date().toISOString()
         };
-        await addTicketToDB(ticket);
+
+        const tickets = getTickets();
+        tickets.unshift(ticket);
+        saveTickets(tickets);
         form.reset();
-        await renderTickets();
+        renderTickets();
+        showToast('Тикет успешно отправлен в поддержку!');
     });
 }
 
-async function renderTickets() {
+function makeTicketId() {
+    const number = 1000 + getTickets().length + 1;
+    return `VPN-${number}`;
+}
+
+function renderTickets() {
     const list = document.getElementById('ticketList');
     if (!list) return;
 
-    const tickets = await getAllTicketsFromDB();
-    
-    // Обновление статистики на главной
-    document.getElementById('stat-total').textContent = tickets.length;
-    document.getElementById('stat-active').textContent = tickets.filter(t => t.status !== 'done').length;
-
+    const tickets = getTickets();
     if (!tickets.length) {
-        list.innerHTML = '<p style="color:var(--muted)">База данных пуста.</p>';
+        list.innerHTML = '<p class="ticket">Активных обращений нет.</p>';
         return;
     }
 
-    list.innerHTML = tickets.map(t => `
-        <div class="ticket">
+    list.innerHTML = tickets.map(ticket => `
+        <article class="ticket">
             <div class="ticket-head">
-                <span>${t.id} · ${t.service}</span>
-                <span class="status status-${t.status}">${t.status === 'new' ? 'Новый' : t.status === 'work' ? 'В работе' : 'Закрыт'}</span>
+                <strong>${escapeHtml(ticket.id)} · ${escapeHtml(ticket.service)}</strong>
+                <span class="status status-${ticket.status}">${statusLabel(ticket.status)}</span>
             </div>
-            <p style="margin: 4px 0;">${t.text}</p>
-            <small style="color:var(--muted)">${t.name} (${t.contact}) — ${t.date}</small>
-            <div style="margin-top: 10px; display:flex; gap:6px;">
-                <button class="btn ghost btn-compact" onclick="updateStatus('${t.id}', 'work')">В работу</button>
-                <button class="btn ghost btn-compact" onclick="updateStatus('${t.id}', 'done')">Закрыть</button>
-            </div>
-        </div>
+            <p>${escapeHtml(ticket.text)}</p>
+            <small>${escapeHtml(ticket.name)} · ${escapeHtml(ticket.contact)} · ${formatDate(ticket.createdAt)}</small>
+        </article>
     `).join('');
 }
 
-async function updateStatus(id, status) {
-    const tickets = await getAllTicketsFromDB();
-    const ticket = tickets.find(t => t.id === id);
-    if (ticket) {
-        ticket.status = status;
-        await addTicketToDB(ticket);
-        await renderTickets();
+function statusLabel(status) {
+    if (status === 'work') return 'В обработке';
+    if (status === 'done') return 'Решено';
+    return 'Новый';
+}
+
+function clearClosedTickets() {
+    const active = getTickets().filter(ticket => ticket.status !== 'done');
+    saveTickets(active);
+    renderTickets();
+    showToast('Закрытые тикеты очищены.');
+}
+
+function bindAccount() {
+    const loginForm = document.getElementById('loginForm');
+    const panel = document.getElementById('profilePanel');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', event => {
+            event.preventDefault();
+            const profile = {
+                name: document.getElementById('loginName').value.trim(),
+                email: document.getElementById('loginEmail').value.trim(),
+                tariff: 'Демо-доступ (3 дня)',
+                expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('ru-RU'),
+                balance: '0₽'
+            };
+            localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+            renderProfile();
+            showToast('Вход успешно выполнен!');
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem(PROFILE_KEY);
+            renderProfile();
+            showToast('Вы вышли из аккаунта.');
+        });
     }
 }
 
-async function clearClosedTickets() {
-    const tickets = await getAllTicketsFromDB();
-    for (const t of tickets) {
-        if (t.status === 'done') {
-            await deleteTicketFromDB(t.id);
-        }
+function getProfile() {
+    try {
+        return JSON.parse(localStorage.getItem(PROFILE_KEY)) || null;
+    } catch (e) {
+        return null;
     }
-    await renderTickets();
 }
 
-function prefillTicket(service) {
-    showSection('support');
-    document.getElementById('ticketService').value = service;
-    document.getElementById('ticketText').value = `Интересует пакет услуг: "${service}". Жду спецификацию проекта.`;
+function renderProfile() {
+    const profile = getProfile();
+    const loginForm = document.getElementById('loginForm');
+    const panel = document.getElementById('profilePanel');
+
+    if (!loginForm || !panel) return;
+    loginForm.style.display = profile ? 'none' : 'grid';
+    panel.style.display = profile ? 'block' : 'none';
+
+    if (!profile) return;
+
+    document.getElementById('profileAvatar').textContent = getInitials(profile.name);
+    document.getElementById('profileName').textContent = profile.name;
+    document.getElementById('profileEmail').textContent = profile.email;
+    document.getElementById('profileTariff').textContent = profile.tariff;
+    document.getElementById('profileExpires').textContent = profile.expires;
+    document.getElementById('profileBalance').textContent = profile.balance;
 }
 
-// Управление профилем ИП
-function bindProfileForm() {
-    const form = document.getElementById('profileForm');
-    if (!form) return;
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        const prof = {
-            company: document.getElementById('profCompany').value,
-            inn: document.getElementById('profInn').value,
-            email: document.getElementById('profEmail').value,
-            about: document.getElementById('profAbout').value
-        };
-        localStorage.setItem(PROFILE_KEY, JSON.stringify(prof));
-        alert('Данные профиля ИП успешно обновлены!');
-    });
+function buyTariff(tariffKey) {
+    const profile = getProfile();
+    if (!profile) {
+        showSection('account');
+        showToast('Сначала войдите в аккаунт!');
+        return;
+    }
+
+    const t = tariffData[tariffKey];
+    profile.tariff = t.title;
+    
+    const expDate = new Date();
+    if (tariffKey === 'monthly') expDate.setMonth(expDate.getMonth() + 1);
+    if (tariffKey === 'halfyear') expDate.setMonth(expDate.getMonth() + 6);
+    if (tariffKey === 'yearly') expDate.setFullYear(expDate.getFullYear() + 1);
+    
+    profile.expires = expDate.toLocaleDateString('ru-RU');
+    profile.balance = 'Оплачено';
+    
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    renderProfile();
+    showSection('account');
+    showToast(`Тариф "${t.title}" успешно активирован!`);
 }
 
-function loadProfile() {
-    const saved = localStorage.getItem(PROFILE_KEY);
-    if (!saved) return;
-    const prof = JSON.parse(saved);
-    document.getElementById('profCompany').value = prof.company || '';
-    document.getElementById('profInn').value = prof.inn || '';
-    document.getElementById('profEmail').value = prof.email || '';
-    document.getElementById('profAbout').value = prof.about || '';
+function downloadConfig() {
+    const profile = getProfile();
+    if (!profile) {
+        showToast('Ошибка: необходимо войти в аккаунт.');
+        return;
+    }
+    
+    showToast('Скачивание конфигурации...');
+    const configContent = `client
+dev tun
+proto udp
+remote 185.220.101.5 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+remote-cert-tls server
+cipher AES-256-GCM
+auth SHA256
+key-direction 1
+# Данные пользователя: ${profile.name} (${profile.email})
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIB7TCCAZegAwIBAgIJAP9Z4dG... (fake certificate key)
+-----END CERTIFICATE-----
+</ca>
+`;
+
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(configContent));
+    element.setAttribute('download', `shield_vpn_${profile.name}.ovpn`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
 }
 
-// Модальные окна
-function showCase(id) {
-    const c = caseData[id];
+function getInitials(name) {
+    return (name || 'VP')
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(part => part[0])
+        .join('')
+        .toUpperCase() || 'VP';
+}
+
+function showTariff(id) {
+    const item = tariffData[id];
+    if (!item) return;
     openModal(`
-        <span class="chip">${c.badge}</span>
-        <h2 style="margin: 12px 0;">${c.title}</h2>
-        <p>${c.text}</p>
-        <p><strong>Результат решения:</strong> ${c.result}</p>
+        <span class="badge">${escapeHtml(item.badge)}</span>
+        <h2 style="margin: 15px 0;">${escapeHtml(item.title)}</h2>
+        <p>${escapeHtml(item.text)}</p>
+        <p style="margin-top: 15px;"><strong>Преимущество:</strong> ${escapeHtml(item.result)}</p>
+        <button class="btn primary" style="margin-top: 20px; width: 100%;" onclick="closeModal(); buyTariff('${id}')">Активировать подписку</button>
     `);
 }
 
 function showArticle(id) {
-    const a = articleData[id];
+    const article = articleData[id];
+    if (!article) return;
     openModal(`
-        <h2>${a.title}</h2>
-        <p style="line-height:1.6;">${a.text}</p>
+        <p class="overline">База знаний</p>
+        <h2>${escapeHtml(article.title)}</h2>
+        <p style="margin-top: 15px; line-height: 1.6;">${escapeHtml(article.text)}</p>
     `);
 }
 
 function openModal(html) {
-    document.getElementById('modal-body').innerHTML = html;
-    document.getElementById('modal').style.display = 'grid';
+    const modal = document.getElementById('modal');
+    const body = document.getElementById('modal-body');
+    if (!modal || !body) return;
+    body.innerHTML = html;
+    modal.style.display = 'grid';
 }
 
 function closeModal() {
-    document.getElementById('modal').style.display = 'none';
+    const modal = document.getElementById('modal');
+    if (modal) modal.style.display = 'none';
 }
 
-window.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+function showToast(message) {
+    const oldToast = document.querySelector('.toast');
+    if (oldToast) oldToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.remove(), 3200);
+}
+
+function formatDate(value) {
+    const date = new Date(value);
+    return date.toLocaleString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
+window.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeModal();
+});
