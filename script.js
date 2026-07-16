@@ -98,7 +98,7 @@ async function checkUserSession() {
             .eq('email', session.user.email)
             .single();
 
-        // Если пользователь есть в Auth, а профиля в таблице нет (например, не создался при регистрации) — создаём сейчас
+        // Если пользователь есть в Auth, а профиля в таблице нет (например, не создался при регистрации) — создаём
         if (!userProfile) {
             const expireDate = new Date();
             expireDate.setDate(expireDate.getDate() + 3);
