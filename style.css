@@ -383,7 +383,7 @@ input:focus, select:focus, textarea:focus {
     gap: 2rem;
 }
 
-.config-card, .user-tickets-card, .support-form-card {
+.config-card, .user-tickets-card, .support-form-card, .terms-card, .billing-card {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 24px;
@@ -447,6 +447,101 @@ input:focus, select:focus, textarea:focus {
     margin-top: 0.75rem;
 }
 
+/* ==================== ТАБЛИЦЫ И СПИСКИ ==================== */
+.terms-content, .billing-content, .privacy-content {
+    margin-top: 2rem;
+}
+
+.terms-content h3, .billing-content h3, .privacy-content h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+.terms-content ul, .billing-content ul, .privacy-content ul {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.terms-content li, .billing-content li, .privacy-content li {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.terms-content p, .billing-content p, .privacy-content p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+}
+
+.pricing-table {
+    width: 100%;
+    margin-top: 1.5rem;
+    border-collapse: collapse;
+}
+
+.pricing-table th, .pricing-table td {
+    padding: 1rem;
+    border: 1px solid var(--card-border);
+    text-align: left;
+}
+
+.pricing-table th {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.pricing-table tr:hover {
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.warning-box, .info-box {
+    background: rgba(245, 158, 11, 0.08);
+    border-left: 4px solid #f59e0b;
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+.info-box {
+    background: rgba(16, 185, 129, 0.08);
+    border-left-color: var(--accent-color);
+}
+
+/* ==================== ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ ==================== */
+.privacy-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.privacy-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 3rem;
+    backdrop-filter: blur(10px);
+}
+
+.privacy-date {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.privacy-notice {
+    background: rgba(239, 68, 68, 0.08);
+    border-left: 4px solid var(--danger-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.privacy-notice p {
+    margin-bottom: 0;
+    color: #fca5a5;
+}
+
 /* ==================== МОДАЛЬНОЕ ОКНО ==================== */
 .modal {
     display: none;
@@ -470,6 +565,8 @@ input:focus, select:focus, textarea:focus {
     width: 90%;
     position: relative;
     animation: zoomIn 0.25s ease-out;
+    max-height: 85vh;
+    overflow-y: auto;
 }
 
 @keyframes zoomIn {
@@ -524,6 +621,16 @@ input:focus, select:focus, textarea:focus {
     margin: 0 auto;
 }
 
+.footer-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: all var(--transition-speed);
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+}
+
 .footer-copy {
     margin-top: 0.5rem;
     opacity: 0.7;
@@ -571,5 +678,17 @@ input:focus, select:focus, textarea:focus {
 
     .profile-layout {
         grid-template-columns: 1fr;
+    }
+
+    .privacy-card {
+        padding: 1.5rem;
+    }
+
+    .pricing-table {
+        font-size: 0.85rem;
+    }
+
+    .pricing-table th, .pricing-table td {
+        padding: 0.75rem;
     }
 }
