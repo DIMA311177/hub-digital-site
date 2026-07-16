@@ -75,6 +75,33 @@ async function checkUserSession() {
             .eq('email', session.user.email)
             .single();
 
+        // Если пользователь есть в Auth, а профиля в таблице нет (например, не создался при регистрации) — создаём сейчас
+        if (!userProfile) {
+            const expireDate = new Date();
+            expireDate.setDate(expireDate.getDate() + 3);
+            const formattedDate = expireDate.toISOString().split('T')[0];
+
+            const { data: createdProfile, error: createError } = await supabaseClient
+                .from('vpn_users')
+                .insert([
+                    {
+                        name: session.user.user_metadata?.display_name || 'Пользователь',
+                        email: session.user.email,
+                        tariff: 'Демо-доступ (3 дня)',
+                        expires: formattedDate,
+                        balance: '0₽'
+                    }
+                ])
+                .select()
+                .single();
+
+            if (!createError) {
+                userProfile = createdProfile;
+            } else {
+                console.error('Не удалось создать профиль:', createError.message);
+            }
+        }
+
         if (userProfile) {
             localStorage.setItem(PROFILE_KEY, JSON.stringify(userProfile));
         }
