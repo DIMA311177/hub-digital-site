@@ -10,6 +10,21 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const PROFILE_KEY = 'hubdigital_profile_v1';
 let isSignUpMode = false; // Переключатель режимов Вход / Регистрация
 
+// Достаёт читаемый текст ошибки из объекта Supabase, даже если .message пустой
+function getErrorMessage(err) {
+    if (!err) return 'неизвестная ошибка';
+    if (typeof err.message === 'string' && err.message && err.message !== '{}') return err.message;
+    if (err.error_description) return err.error_description;
+    if (err.msg) return err.msg;
+    if (err.status === 429) return 'слишком много попыток, подождите немного';
+    try {
+        const str = JSON.stringify(err);
+        return str && str !== '{}' ? str : 'сервис недоступен, проверьте соединение';
+    } catch (e) {
+        return 'неизвестная ошибка';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     bindNavigation();
     bindFaq();
@@ -19,8 +34,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Проверяем сессию пользователя при старте
     await checkUserSession();
     
-    // Показываем главную страницу по умолчанию
-    showSection('home');
+    // Если вернулись со страницы оплаты — проверяем статус вместо обычного старта
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment') === 'return') {
+        window.history.replaceState({}, '', window.location.pathname);
+        showSection('account');
+        handlePaymentReturn();
+    } else {
+        // Показываем главную страницу по умолчанию
+        showSection('home');
+    }
 });
 
 // Навигация
@@ -98,7 +121,7 @@ async function checkUserSession() {
             if (!createError) {
                 userProfile = createdProfile;
             } else {
-                console.error('Не удалось создать профиль:', createError.message);
+                console.error('Не удалось создать профиль:', getErrorMessage(createError));
             }
         }
 
@@ -158,7 +181,8 @@ function bindAccount() {
                 });
 
                 if (signUpError) {
-                    showToast('Ошибка регистрации: ' + signUpError.message);
+                    console.error('signUpError', signUpError);
+                    showToast('Ошибка регистрации: ' + getErrorMessage(signUpError));
                     return;
                 }
 
@@ -182,7 +206,7 @@ function bindAccount() {
                     .single();
 
                 if (createError) {
-                    showToast('Ошибка создания профиля: ' + createError.message);
+                    showToast('Ошибка создания профиля: ' + getErrorMessage(createError));
                     return;
                 }
 
@@ -262,7 +286,7 @@ function bindAccount() {
                 .eq('email', profile.email);
 
             if (error) {
-                showToast('Ошибка при активации: ' + error.message);
+                showToast('Ошибка при активации: ' + getErrorMessage(error));
             } else {
                 profile.balance = newBalance;
                 profile.tariff = newTariff;
@@ -321,6 +345,60 @@ function getInitials(name) {
         .map(part => part[0])
         .join('')
         .toUpperCase() || 'U';
+}
+
+// ============== ОПЛАТА ТАРИФОВ (ЮKassa) ==============
+
+async function startCheckout(tariffId) {
+    const profile = getProfile();
+    if (!profile) {
+        closeModal();
+        showToast('Сначала войдите в личный кабинет');
+        showSection('account');
+        return;
+    }
+
+    showToast('Переходим к оплате...');
+
+    try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: profile.email,
+                tariffId,
+                returnUrl: window.location.origin + window.location.pathname + '?payment=return'
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.confirmationUrl) {
+            showToast('Ошибка оплаты: ' + (data.error || 'попробуйте позже'));
+            return;
+        }
+
+        window.location.href = data.confirmationUrl;
+    } catch (e) {
+        showToast('Не удалось начать оплату. Проверьте соединение.');
+    }
+}
+
+async function handlePaymentReturn() {
+    showToast('Проверяем статус оплаты...');
+    const previousTariff = getProfile()?.tariff;
+
+    for (let i = 0; i < 6; i++) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await checkUserSession();
+        const updated = getProfile();
+        if (updated && updated.tariff !== previousTariff) {
+            showToast('Оплата прошла успешно! Тариф обновлён 🎉');
+            return;
+        }
+    }
+
+    showToast('Платёж обрабатывается. Если тариф не обновится — обновите страницу через пару минут.');
 }
 
 // ============== СКАЧИВАНИЕ КОНФИГУРАЦИЙ VPN ==============
@@ -409,7 +487,7 @@ function bindTicketForm() {
             ]);
 
         if (error) {
-            showToast('Ошибка: ' + error.message);
+            showToast('Ошибка: ' + getErrorMessage(error));
         } else {
             form.reset();
             showToast('Ваше обращение принято!');
@@ -468,19 +546,25 @@ function showCase(id) {
             title: 'Демо-доступ',
             badge: 'Тест',
             text: 'Бесплатный период на 3 дня. Скорость работы канала до 100 Мбит/с. Доступен 1 сервер.',
-            result: 'Идеально для проверки задержки (пинга) в онлайн-играх.'
+            result: 'Идеально для проверки задержки (пинга) в онлайн-играх.',
+            ctaLabel: 'Понятно',
+            ctaAction: 'closeModal()'
         },
         agency: {
             title: 'Стандарт',
             badge: 'Популярно',
             text: 'План на 30 дней. Безлимитный трафик, высокая скорость доступа на любых устройствах.',
-            result: 'Отличный повседневный вариант без переплат.'
+            result: 'Отличный повседневный вариант без переплат.',
+            ctaLabel: 'Оплатить картой — 199₽',
+            ctaAction: "startCheckout('standard')"
         },
         shop: {
             title: 'Премиум',
             badge: 'Максимум',
             text: 'План на 90 дней. Доступ к VIP серверам с минимальной нагрузкой, выделенный статический IP.',
-            result: 'Стабильность для серьезной работы или стриминга.'
+            result: 'Стабильность для серьезной работы или стриминга.',
+            ctaLabel: 'Оплатить картой — 499₽',
+            ctaAction: "startCheckout('premium')"
         }
     };
 
@@ -492,7 +576,7 @@ function showCase(id) {
         <h2>${escapeHtml(item.title)}</h2>
         <p style="margin-top: 1rem;">${escapeHtml(item.text)}</p>
         <p style="margin-top: 1rem; color: var(--accent-color);"><strong>Назначение:</strong> ${escapeHtml(item.result)}</p>
-        <button style="margin-top: 1.5rem; width: 100%;" class="btn primary" onclick="closeModal(); prefillTicket('${escapeHtml(item.title)}')">Выбрать тариф</button>
+        <button style="margin-top: 1.5rem; width: 100%;" class="btn primary" onclick="${item.ctaAction}">${escapeHtml(item.ctaLabel)}</button>
     `);
 }
 
