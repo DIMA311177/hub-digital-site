@@ -252,6 +252,15 @@ input, select, textarea {
     transition: all var(--transition-speed);
 }
 
+select {
+    color-scheme: dark;
+}
+
+select option {
+    background: #111827;
+    color: var(--text-primary);
+}
+
 input:focus, select:focus, textarea:focus {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
